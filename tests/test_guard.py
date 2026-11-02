@@ -66,3 +66,8 @@ def test_caps_huge_limit():
 
 def test_limit_in_comment_does_not_count():
     assert len(run(guard("SELECT * FROM orders -- LIMIT 5"))) == 1000
+
+
+def test_table_name_case_insensitive():
+    run(guard("SELECT COUNT(*) FROM Orders"))
+    run(guard("WITH T AS (SELECT * FROM orders) SELECT * FROM t"))
