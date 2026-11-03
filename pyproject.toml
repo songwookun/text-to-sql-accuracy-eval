@@ -6,6 +6,7 @@ dependencies = [
     "google-genai>=2.34.0",
     "jupyter>=1.1.1",
     "pandas>=3.1.0",
+    "python-dotenv>=1.2.4",
     "sqlglot>=30.26.0",
 ]
 
