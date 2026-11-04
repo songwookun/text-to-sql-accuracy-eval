@@ -71,6 +71,7 @@ export default function App() {
 
       {result && (
         <section className="result">
+          {result.interpretation && <div className="interp">해석: {result.interpretation}</div>}
           {result.sql && (
             <details open>
               <summary>생성된 SQL</summary>

@@ -1,6 +1,7 @@
 export type AskResponse = {
   question: string
   sql: string
+  interpretation: string
   columns: string[]
   rows: unknown[][]
   error: string | null

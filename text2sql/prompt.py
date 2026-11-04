@@ -65,7 +65,7 @@ def load_schema() -> str:
 VERSIONS = ["v0", "v1", "v2", "v3"]
 
 
-def build_prompt(question: str, version: str = "v0") -> str:
+def build_prompt(question: str, version: str = "v0", extra: str | None = None) -> str:
     level = VERSIONS.index(version)
     parts = [
         "You are a SQLite expert. Write one SQLite query that answers the question.",
@@ -79,5 +79,7 @@ def build_prompt(question: str, version: str = "v0") -> str:
         parts.append(JOIN_NOTES)
     if level >= 3:
         parts.append(EXAMPLES)
+    if extra:  # 데모 전용 규칙 (실험에서는 안 씀)
+        parts.append(extra)
     parts.append(f"## Question\n{question}")
     return "\n\n".join(parts)

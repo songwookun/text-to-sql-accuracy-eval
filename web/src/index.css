@@ -84,3 +84,5 @@ tr:last-child td { border-bottom: 0; }
   .ask { flex-direction: column; }
   .ask button { padding: 12px; }
 }
+
+.interp { margin-bottom: 10px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--code-bg); border-radius: 4px; font-size: 14px; }

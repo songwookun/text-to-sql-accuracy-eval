@@ -41,6 +41,14 @@ def load_done(path: Path) -> list[dict]:
         return [r for r in csv.DictReader(f) if r["label"] != "api_error"]
 
 
+def save(path: Path, rows: list[dict]):
+    rows.sort(key=lambda x: (int(x["run"]), x["id"]))
+    with path.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--version", default="v0")
@@ -71,16 +79,14 @@ def main():
                     "trap": g["trap"] or "", "question": g["question"], "pred_sql": sql,
                     "label": label, "detail": detail, "failure_type": "",
                 })
+                # 중간에 끊겨도 한도 쓴 결과는 남김
+                save(out, rows)  
                 print(f"[{args.version} r{r}] {g['id']} L{g['level']} {label}", flush=True)
                 time.sleep(CALL_INTERVAL)
     except DailyQuotaExceeded:
         print("\n하루 한도 도달 → 저장 후 중단. 내일 같은 명령으로 이어서 실행")
 
-    rows.sort(key=lambda x: (int(x["run"]), x["id"]))
-    with out.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS)
-        w.writeheader()
-        w.writerows(rows)
+    save(out, rows)
 
     total = args.runs * len(golden)
     print(f"\nmodel={MODEL}  saved → {out.relative_to(ROOT)}  ({len(rows)}/{total})")

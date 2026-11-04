@@ -28,3 +28,14 @@ def test_unsafe_sql_is_reported(client, monkeypatch):
 
 def test_empty_question_rejected(client):
     assert client.post("/api/ask", json={"question": ""}).status_code == 422
+
+
+def test_split_interpretation():
+    assert api.split_interpretation("-- 해석: 상품 개수 기준\nSELECT 1") == ("상품 개수 기준", "SELECT 1")
+    assert api.split_interpretation("SELECT 1") == ("", "SELECT 1")
+
+
+def test_demo_rules_only_in_demo_prompt():
+    from text2sql.prompt import build_prompt
+    plain, demo = build_prompt("q", "v3"), build_prompt("q", "v3", api.DEMO_RULES)
+    assert "Output rules" not in plain and demo.endswith("## Question\nq")
