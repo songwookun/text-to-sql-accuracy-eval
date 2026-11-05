@@ -1,7 +1,9 @@
 ## 버전별 정확도 (전체 회차 합산)
-| 버전 | 진행 | correct | 95% CI | silent_wrong | error |
-|---|---|---|---|---|---|
-| v0 | 33/40 | 64% (21/33) | 47%–78% | 36% (12/33) | 0% (0/33) |
+| 버전 | 진행 | correct | 95% CI | 너그러운 correct | silent_wrong | error |
+|---|---|---|---|---|---|---|
+| v0 | 33/40 | 64% (21/33) | 47%–78% | 73% (24/33) | 36% (12/33) | 0% (0/33) |
+
+너그러운 correct: 컬럼 수만 다르고 겹치는 컬럼 값·순서는 같은 경우까지 정답 (예: 순위는 맞는데 개수 컬럼 누락)
 
 ## 난이도별 정답률
 | 버전 | L1 | L2 | L3 | L4 |
@@ -19,20 +21,20 @@
 | v0 | 85% (11/13) |
 
 ## 실패 문항
-| 버전 | 회차 | 문항 | 함정 | 라벨 | 실패유형 | 상세 |
-|---|---|---|---|---|---|---|
-| v0 | r1 | Q08 |  | silent_wrong | dup_count | expected [('approved', 1), ('canceled', 421), ('created', 2) |
-| v0 | r1 | Q11 |  | silent_wrong | revenue_def | expected [('2018-01', 924645.0), ('2018-02', 826437.13), ('2 |
-| v0 | r1 | Q12 |  | silent_wrong | missing_filter | expected [('health_beauty', 755724.5), ('watches_gifts', 687 |
-| v0 | r1 | Q13 |  | silent_wrong | missing_column | expected [('bed_bath_table', 5235), ('health_beauty', 4204), |
-| v0 | r1 | Q14 |  | silent_wrong | missing_filter | expected [('SP', 8509511.46), ('PR', 1232096.99), ('MG', 977 |
-| v0 | r1 | Q16 |  | silent_wrong | missing_filter | expected [(755724.5,)], got [(772238.15,)] |
-| v0 | r1 | Q17 | dup_join | silent_wrong | revenue_def | expected [(404020.72,)], got [(343013.19,)] |
-| v0 | r1 | Q19 | biz_term | silent_wrong | revenue_def | expected [(5962902.01,)], got [(7249746.73,)] |
-| v0 | r2 | Q07 |  | silent_wrong | missing_column | expected [('bed_bath_table', 3029), ('sports_leisure', 2867) |
-| v0 | r2 | Q12 |  | silent_wrong | missing_filter | expected [('health_beauty', 755724.5), ('watches_gifts', 687 |
-| v0 | r2 | Q13 |  | silent_wrong | missing_column | expected [('bed_bath_table', 5235), ('health_beauty', 4204), |
-| v0 | r2 | Q17 | dup_join | silent_wrong | revenue_def | expected [(404020.72,)], got [(343013.19,)] |
+| 버전 | 회차 | 문항 | 함정 | 라벨 | 너그러운 | 실패유형 | 상세 |
+|---|---|---|---|---|---|---|---|
+| v0 | r1 | Q08 |  | silent_wrong |  | dup_count | expected [('approved', 1), ('canceled', 421), ('created', 2) |
+| v0 | r1 | Q11 |  | silent_wrong |  | revenue_def | expected [('2018-01', 924645.0), ('2018-02', 826437.13), ('2 |
+| v0 | r1 | Q12 |  | silent_wrong |  | missing_filter | expected [('health_beauty', 755724.5), ('watches_gifts', 687 |
+| v0 | r1 | Q13 |  | silent_wrong | ✓ | missing_column | expected [('bed_bath_table', 5235), ('health_beauty', 4204), |
+| v0 | r1 | Q14 |  | silent_wrong |  | missing_filter | expected [('SP', 8509511.46), ('PR', 1232096.99), ('MG', 977 |
+| v0 | r1 | Q16 |  | silent_wrong |  | missing_filter | expected [(755724.5,)], got [(772238.15,)] |
+| v0 | r1 | Q17 | dup_join | silent_wrong |  | revenue_def | expected [(404020.72,)], got [(343013.19,)] |
+| v0 | r1 | Q19 | biz_term | silent_wrong |  | revenue_def | expected [(5962902.01,)], got [(7249746.73,)] |
+| v0 | r2 | Q07 |  | silent_wrong | ✓ | missing_column | expected [('bed_bath_table', 3029), ('sports_leisure', 2867) |
+| v0 | r2 | Q12 |  | silent_wrong |  | missing_filter | expected [('health_beauty', 755724.5), ('watches_gifts', 687 |
+| v0 | r2 | Q13 |  | silent_wrong | ✓ | missing_column | expected [('bed_bath_table', 5235), ('health_beauty', 4204), |
+| v0 | r2 | Q17 | dup_join | silent_wrong |  | revenue_def | expected [(404020.72,)], got [(343013.19,)] |
 
 ## 실패 유형 분포
 | 유형 | 건수 |

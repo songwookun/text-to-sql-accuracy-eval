@@ -4,6 +4,8 @@ import math
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from text2sql.scorer import is_lenient_correct
+
 ROOT = Path(__file__).resolve().parent
 LABELS = ["correct", "silent_wrong", "error"]
 
@@ -42,15 +44,22 @@ def main():
     if not runs:
         print("runs/*.csv 없음")
         return
+    gold = {g["id"]: g["sql"] for g in golden}
+    for rs in runs.values():
+        for r in rs:
+            r["lenient"] = r["label"] == "correct" or (
+                r["label"] == "silent_wrong" and is_lenient_correct(gold[r["id"]], r["pred_sql"]))
 
     out = ["## 버전별 정확도 (전체 회차 합산)"]
     rows = []
     for v, rs in runs.items():
         c = Counter(r["label"] for r in rs)
         lo, hi = wilson(c["correct"], len(rs))
+        lenient = sum(r["lenient"] for r in rs)
         rows.append([v, f"{len(rs)}/{expected}", pct(c["correct"], len(rs)), f"{lo:.0%}–{hi:.0%}",
-                     pct(c["silent_wrong"], len(rs)), pct(c["error"], len(rs))])
-    out.append(table(["버전", "진행", "correct", "95% CI", "silent_wrong", "error"], rows))
+                     pct(lenient, len(rs)), pct(c["silent_wrong"], len(rs)), pct(c["error"], len(rs))])
+    out.append(table(["버전", "진행", "correct", "95% CI", "너그러운 correct", "silent_wrong", "error"], rows))
+    out.append("\n너그러운 correct: 컬럼 수만 다르고 겹치는 컬럼 값·순서는 같은 경우까지 정답 (예: 순위는 맞는데 개수 컬럼 누락)")
 
     out.append("\n## 난이도별 정답률")
     levels = sorted({g["level"] for g in golden})
@@ -89,9 +98,9 @@ def main():
     for v, rs in runs.items():
         for r in rs:
             if r["label"] != "correct":
-                rows.append([v, f"r{r['run']}", r["id"], r["trap"] or "", r["label"],
+                rows.append([v, f"r{r['run']}", r["id"], r["trap"] or "", r["label"], "✓" if r["lenient"] else "",
                              r["failure_type"] or "(미분류)", r["detail"][:60].replace("|", "/")])
-    out.append(table(["버전", "회차", "문항", "함정", "라벨", "실패유형", "상세"], rows) if rows else "없음")
+    out.append(table(["버전", "회차", "문항", "함정", "라벨", "너그러운", "실패유형", "상세"], rows) if rows else "없음")
 
     types = Counter(r["failure_type"] or "(미분류)" for rs in runs.values() for r in rs if r["label"] != "correct")
     if types:
