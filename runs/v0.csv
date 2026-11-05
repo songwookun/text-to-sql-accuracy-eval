@@ -1,0 +1,283 @@
+date,run,id,level,trap,question,pred_sql,label,detail,failure_type
+2026-11-03,1,Q01,1,,배송 완료된 주문은 몇 건이야?,SELECT count(*) FROM orders WHERE order_status = 'delivered';,correct,,
+2026-11-03,1,Q02,1,,결제 수단별로 결제가 몇 건씩 있었어?,"SELECT payment_type, COUNT(*) FROM order_payments GROUP BY payment_type",correct,,
+2026-11-03,1,Q03,1,,리뷰 평균 점수가 몇 점이야?,SELECT AVG(review_score) FROM order_reviews;,correct,,
+2026-11-03,1,Q04,1,,2017년에 들어온 주문은 몇 건이야?,"SELECT COUNT(order_id) FROM orders WHERE strftime('%Y', order_purchase_timestamp) = '2017'",correct,,
+2026-11-03,1,Q05,1,,판매자가 가장 많은 주(state) 상위 3개 알려줘,"SELECT
+  seller_state,
+  COUNT(*) AS seller_count
+FROM sellers
+GROUP BY
+  seller_state
+ORDER BY
+  seller_count DESC
+LIMIT 3;",correct,,
+2026-11-04,1,Q06,2,,주문이 가장 많이 들어온 고객 주(state) 상위 5개는?,"SELECT
+  T1.customer_state,
+  COUNT(T2.order_id)
+FROM customers AS T1
+JOIN orders AS T2
+  ON T1.customer_id = T2.customer_id
+GROUP BY T1.customer_state
+ORDER BY COUNT(T2.order_id) DESC
+LIMIT 5;",correct,,
+2026-11-04,1,Q07,2,,상품이 가장 많이 등록된 카테고리 상위 5개를 영어 이름으로 보여줘,"SELECT
+  t2.product_category_name_english,
+  COUNT(t1.product_id)
+FROM products AS t1
+JOIN product_category_name_translation AS t2
+  ON t1.product_category_name = t2.product_category_name
+GROUP BY
+  t2.product_category_name_english
+ORDER BY
+  COUNT(t1.product_id) DESC
+LIMIT 5",correct,,
+2026-11-04,1,Q08,2,,리뷰 1점을 받은 주문들은 주문 상태별로 몇 건씩이야?,"SELECT
+  T1.order_status,
+  COUNT(T1.order_id)
+FROM orders AS T1
+JOIN order_reviews AS T2
+  ON T1.order_id = T2.order_id
+WHERE
+  T2.review_score = 1
+GROUP BY
+  T1.order_status",silent_wrong,"expected [('approved', 1), ('canceled', 421), ('created', 2)], got [('approved', 1), ('canceled', 422), ('created', 2)]",dup_count
+2026-11-04,1,Q09,2,,평균 배송비가 가장 비싼 판매자 주(state) 상위 3개는?,"SELECT
+  T1.seller_state,
+  AVG(T2.freight_value)
+FROM sellers AS T1
+JOIN order_items AS T2
+  ON T1.seller_id = T2.seller_id
+GROUP BY
+  T1.seller_state
+ORDER BY
+  AVG(T2.freight_value) DESC
+LIMIT 3;",correct,,
+2026-11-04,1,Q10,2,,지난달 결제 수단별 결제 금액 합계 알려줘,"SELECT
+  T2.payment_type,
+  SUM(T2.payment_value) AS total_payment_value
+FROM orders AS T1
+JOIN order_payments AS T2
+  ON T1.order_id = T2.order_id
+WHERE
+  strftime('%Y-%m', T1.order_purchase_timestamp) = '2018-07'
+GROUP BY
+  T2.payment_type",correct,,
+2026-11-05,1,Q11,2,,2018년 상반기 월별 배송 완료 주문의 매출은?,"SELECT
+  strftime('%Y-%m', t1.order_purchase_timestamp) AS month,
+  SUM(t2.payment_value) AS total_revenue
+FROM orders AS t1
+JOIN order_payments AS t2
+  ON t1.order_id = t2.order_id
+WHERE
+  t1.order_status = 'delivered'
+  AND t1.order_purchase_timestamp >= '2018-01-01'
+  AND t1.order_purchase_timestamp < '2018-07-01'
+GROUP BY
+  month
+ORDER BY
+  month;",silent_wrong,"expected [('2018-01', 924645.0), ('2018-02', 826437.13), ('2018-03', 953356.25)], got [('2018-01', 1078606.86), ('2018-02', 966510.88), ('2018-03', 1120678.0)]",revenue_def
+2026-11-05,1,Q12,3,,2018년 카테고리별 매출 상위 10개를 영어 카테고리명으로 보여줘,"SELECT
+  t.product_category_name_english,
+  SUM(oi.price) AS total_sales
+FROM orders AS o
+JOIN order_items AS oi
+  ON o.order_id = oi.order_id
+JOIN products AS p
+  ON oi.product_id = p.product_id
+JOIN product_category_name_translation AS t
+  ON p.product_category_name = t.product_category_name
+WHERE
+  strftime('%Y', o.order_purchase_timestamp) = '2018'
+GROUP BY
+  t.product_category_name_english
+ORDER BY
+  total_sales DESC
+LIMIT 10;",silent_wrong,"expected [('health_beauty', 755724.5), ('watches_gifts', 687855.2), ('bed_bath_table', 532358.85)], got [('health_beauty', 772238.15), ('watches_gifts', 708850.9400000001), ('bed_bath_table', 538069.26)]",missing_filter
+2026-11-05,1,Q13,3,,"상파울루(SP) 고객들이 가장 많이 산 카테고리 상위 5개는? 영어 이름으로, 팔린 상품 개수 기준","SELECT
+  t5.product_category_name_english
+FROM customers AS t1
+JOIN orders AS t2
+  ON t1.customer_id = t2.customer_id
+JOIN order_items AS t3
+  ON t2.order_id = t3.order_id
+JOIN products AS t4
+  ON t3.product_id = t4.product_id
+JOIN product_category_name_translation AS t5
+  ON t4.product_category_name = t5.product_category_name
+WHERE
+  t1.customer_state = 'SP'
+GROUP BY
+  t5.product_category_name_english
+ORDER BY
+  COUNT(*) DESC
+LIMIT 5",silent_wrong,"expected [('bed_bath_table', 5235), ('health_beauty', 4204), ('sports_leisure', 3667)], got [('bed_bath_table',), ('health_beauty',), ('sports_leisure',)]",missing_column
+2026-11-05,1,Q14,3,,판매자 주(state)별 매출 상위 5개는?,"SELECT
+  t1.seller_state,
+  SUM(t2.price) AS total_sales
+FROM sellers AS t1
+JOIN order_items AS t2
+  ON t1.seller_id = t2.seller_id
+GROUP BY
+  t1.seller_state
+ORDER BY
+  total_sales DESC
+LIMIT 5;",silent_wrong,"expected [('SP', 8509511.46), ('PR', 1232096.99), ('MG', 977866.31)], got [('SP', 8753396.21), ('PR', 1261887.21), ('MG', 1011564.74)]",missing_filter
+2026-11-05,1,Q15,3,,2018년에 상파울루(SP) 판매자가 리우데자네이루(RJ) 고객에게 판 상품은 몇 개야?,"SELECT
+  COUNT(*)
+FROM
+  orders AS T1
+  JOIN order_items AS T2 ON T1.order_id = T2.order_id
+  JOIN sellers AS T3 ON T2.seller_id = T3.seller_id
+  JOIN customers AS T4 ON T1.customer_id = T4.customer_id
+WHERE
+  T3.seller_state = 'SP'
+  AND T4.customer_state = 'RJ'
+  AND strftime('%Y', T1.order_purchase_timestamp) = '2018'",correct,,
+2026-11-05,1,Q16,3,,건강·뷰티 카테고리 상품의 2018년 매출은 얼마야?,"SELECT
+  SUM(t1.price)
+FROM order_items AS t1
+JOIN orders AS t2
+  ON t1.order_id = t2.order_id
+JOIN products AS t3
+  ON t1.product_id = t3.product_id
+JOIN product_category_name_translation AS t4
+  ON t3.product_category_name = t4.product_category_name
+WHERE
+  t4.product_category_name_english = 'health_beauty'
+  AND strftime('%Y', t2.order_purchase_timestamp) = '2018'",silent_wrong,"expected [(755724.5,)], got [(772238.15,)]",missing_filter
+2026-11-05,1,Q17,4,dup_join,바우처로 결제된 배송 완료 주문들의 매출 합계는?,"SELECT
+  SUM(t1.payment_value)
+FROM
+  order_payments AS t1
+  JOIN orders AS t2 ON t1.order_id = t2.order_id
+WHERE
+  t2.order_status = 'delivered'
+  AND t1.payment_type = 'voucher'",silent_wrong,"expected [(404020.72,)], got [(343013.19,)]",revenue_def
+2026-11-05,1,Q18,4,unique_id,2018년에 주문한 고객은 몇 명이야?,"SELECT
+  COUNT(DISTINCT T1.customer_unique_id)
+FROM customers AS T1
+INNER JOIN orders AS T2
+  ON T1.customer_id = T2.customer_id
+WHERE
+  strftime('%Y', T2.order_purchase_timestamp) = '2018'",correct,,
+2026-11-05,1,Q19,4,biz_term,2017년 매출은 얼마야?,"SELECT
+  SUM(t1.payment_value)
+FROM order_payments AS t1
+JOIN orders AS t2
+  ON t1.order_id = t2.order_id
+WHERE
+  strftime('%Y', t2.order_purchase_timestamp) = '2017'",silent_wrong,"expected [(5962902.01,)], got [(7249746.73,)]",revenue_def
+2026-11-05,1,Q20,4,empty_ok,2019년에 들어온 주문 목록 보여줘,"SELECT
+  *
+FROM orders
+WHERE
+  strftime('%Y', order_purchase_timestamp) = '2019'",correct,,
+2026-11-05,2,Q01,1,,배송 완료된 주문은 몇 건이야?,SELECT COUNT(*) FROM orders WHERE order_status = 'delivered',correct,,
+2026-11-05,2,Q02,1,,결제 수단별로 결제가 몇 건씩 있었어?,"SELECT
+  payment_type,
+  COUNT(*)
+FROM order_payments
+GROUP BY
+  payment_type",correct,,
+2026-11-05,2,Q03,1,,리뷰 평균 점수가 몇 점이야?,SELECT AVG(review_score) FROM order_reviews,correct,,
+2026-11-05,2,Q04,1,,2017년에 들어온 주문은 몇 건이야?,"SELECT
+  COUNT(*)
+FROM orders
+WHERE
+  strftime('%Y', order_purchase_timestamp) = '2017';",correct,,
+2026-11-05,2,Q05,1,,판매자가 가장 많은 주(state) 상위 3개 알려줘,"SELECT
+  seller_state,
+  COUNT(*) AS seller_count
+FROM sellers
+GROUP BY seller_state
+ORDER BY seller_count DESC
+LIMIT 3;",correct,,
+2026-11-05,2,Q06,2,,주문이 가장 많이 들어온 고객 주(state) 상위 5개는?,"SELECT
+  T1.customer_state,
+  COUNT(T2.order_id) AS order_count
+FROM customers AS T1
+JOIN orders AS T2
+  ON T1.customer_id = T2.customer_id
+GROUP BY
+  T1.customer_state
+ORDER BY
+  order_count DESC
+LIMIT 5;",correct,,
+2026-11-05,2,Q07,2,,상품이 가장 많이 등록된 카테고리 상위 5개를 영어 이름으로 보여줘,"SELECT
+  t2.product_category_name_english
+FROM products AS t1
+JOIN product_category_name_translation AS t2
+  ON t1.product_category_name = t2.product_category_name
+GROUP BY
+  t2.product_category_name_english
+ORDER BY
+  COUNT(t1.product_id) DESC
+LIMIT 5;",silent_wrong,"expected [('bed_bath_table', 3029), ('sports_leisure', 2867), ('furniture_decor', 2657)], got [('bed_bath_table',), ('sports_leisure',), ('furniture_decor',)]",missing_column
+2026-11-03,2,Q08,2,,리뷰 1점을 받은 주문들은 주문 상태별로 몇 건씩이야?,"SELECT
+  T1.order_status,
+  COUNT(DISTINCT T1.order_id)
+FROM orders AS T1
+JOIN order_reviews AS T2
+  ON T1.order_id = T2.order_id
+WHERE
+  T2.review_score = 1
+GROUP BY
+  T1.order_status",correct,,
+2026-11-03,2,Q09,2,,평균 배송비가 가장 비싼 판매자 주(state) 상위 3개는?,"SELECT
+  T1.seller_state,
+  AVG(T2.freight_value) AS avg_freight
+FROM sellers AS T1
+JOIN order_items AS T2
+  ON T1.seller_id = T2.seller_id
+GROUP BY T1.seller_state
+ORDER BY avg_freight DESC
+LIMIT 3",correct,,
+2026-11-03,2,Q10,2,,지난달 결제 수단별 결제 금액 합계 알려줘,"SELECT
+  T2.payment_type,
+  SUM(T2.payment_value)
+FROM orders AS T1
+JOIN order_payments AS T2
+  ON T1.order_id = T2.order_id
+WHERE strftime('%Y-%m', T1.order_purchase_timestamp) = '2018-07'
+GROUP BY T2.payment_type",correct,,
+2026-11-03,2,Q12,3,,2018년 카테고리별 매출 상위 10개를 영어 카테고리명으로 보여줘,"SELECT
+  t4.product_category_name_english,
+  SUM(t2.price) AS total_sales
+FROM orders AS t1
+JOIN order_items AS t2
+  ON t1.order_id = t2.order_id
+JOIN products AS t3
+  ON t2.product_id = t3.product_id
+JOIN product_category_name_translation AS t4
+  ON t3.product_category_name = t4.product_category_name
+WHERE strftime('%Y', t1.order_purchase_timestamp) = '2018'
+GROUP BY t4.product_category_name_english
+ORDER BY total_sales DESC
+LIMIT 10;",silent_wrong,"expected [('health_beauty', 755724.5), ('watches_gifts', 687855.2), ('bed_bath_table', 532358.85)], got [('health_beauty', 772238.15), ('watches_gifts', 708850.9400000001), ('bed_bath_table', 538069.26)]",missing_filter
+2026-11-03,2,Q13,3,,"상파울루(SP) 고객들이 가장 많이 산 카테고리 상위 5개는? 영어 이름으로, 팔린 상품 개수 기준","SELECT
+  T5.product_category_name_english
+FROM customers AS T1
+JOIN orders AS T2
+  ON T1.customer_id = T2.customer_id
+JOIN order_items AS T3
+  ON T2.order_id = T3.order_id
+JOIN products AS T4
+  ON T3.product_id = T4.product_id
+JOIN product_category_name_translation AS T5
+  ON T4.product_category_name = T5.product_category_name
+WHERE
+  T1.customer_state = 'SP'
+GROUP BY
+  T5.product_category_name_english
+ORDER BY
+  COUNT(T3.order_item_id) DESC
+LIMIT 5;",silent_wrong,"expected [('bed_bath_table', 5235), ('health_beauty', 4204), ('sports_leisure', 3667)], got [('bed_bath_table',), ('health_beauty',), ('sports_leisure',)]",missing_column
+2026-11-03,2,Q17,4,dup_join,바우처로 결제된 배송 완료 주문들의 매출 합계는?,"SELECT
+  SUM(t1.payment_value)
+FROM order_payments AS t1
+JOIN orders AS t2
+  ON t1.order_id = t2.order_id
+WHERE
+  t1.payment_type = 'voucher'
+  AND t2.order_status = 'delivered'",silent_wrong,"expected [(404020.72,)], got [(343013.19,)]",revenue_def
