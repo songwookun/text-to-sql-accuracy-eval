@@ -4,6 +4,7 @@ import math
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from text2sql.lint import lint
 from text2sql.scorer import is_lenient_correct
 
 ROOT = Path(__file__).resolve().parent
@@ -49,6 +50,7 @@ def main():
         for r in rs:
             r["lenient"] = r["label"] == "correct" or (
                 r["label"] == "silent_wrong" and is_lenient_correct(gold[r["id"]], r["pred_sql"]))
+            r["lint"] = [i.code for i in lint(r["pred_sql"], r["question"])]
 
     out = ["## 버전별 정확도 (전체 회차 합산)"]
     rows = []
@@ -106,6 +108,16 @@ def main():
     if types:
         out.append("\n## 실패 유형 분포")
         out.append(table(["유형", "건수"], [[t, str(n)] for t, n in types.most_common()]))
+
+    out.append("\n## lint 탐지 (실행 전 정적 검사)")
+    rows = []
+    for v, rs in runs.items():
+        wrong = [r for r in rs if not r["lenient"]]
+        right = [r for r in rs if r["label"] == "correct"]
+        rows.append([v, pct(sum(bool(r["lint"]) for r in wrong), len(wrong)),
+                     pct(sum(bool(r["lint"]) for r in right), len(right))])
+    out.append(table(["버전", "진짜 오답 중 탐지", "정답인데 경고(오탐)"], rows))
+    out.append("\n진짜 오답 = 너그러운 채점으로도 틀린 것. 주의: 규칙을 V0 오답을 보고 만들었으므로 V0 탐지율은 과대평가")
 
     text = "\n".join(out)
     (ROOT / "runs" / "report.md").write_text(text + "\n")

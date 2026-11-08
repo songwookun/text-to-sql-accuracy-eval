@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 from text2sql.executor import QueryTimeout, query
 from text2sql.guard import UnsafeSQLError, guard
+from text2sql.lint import lint
 from text2sql.llm import MODEL, generate_sql
 from text2sql.prompt import build_prompt
 
@@ -49,6 +50,7 @@ class AskResponse(BaseModel):
     question: str
     sql: str = ""
     interpretation: str = ""
+    warnings: list[str] = []
     columns: list[str] = []
     rows: list[list] = []
     error: str | None = None
@@ -89,6 +91,7 @@ def ask(req: AskRequest):
         res.error_type, res.error = "llm", "Gemini 서버가 바빠요. 잠시 후 다시 시도해주세요."
         return res
 
+    res.warnings = [i.message for i in lint(res.sql, q)]  # 차단 X, 경고만
     try:
         res.columns, rows = query(guard(res.sql))
         res.rows = [list(r) for r in rows]

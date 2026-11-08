@@ -68,7 +68,7 @@ pre {
 }
 
 .alert { padding: 12px 14px; border-radius: 10px; background: var(--err-bg); color: var(--err); font-size: 14px; margin-top: 16px; }
-.alert.quota, .alert.timeout { background: var(--warn-bg); color: var(--warn); }
+.alert.quota, .alert.timeout, .alert.warn { background: var(--warn-bg); color: var(--warn); }
 .result .alert { margin-top: 0; }
 .empty { color: var(--muted); padding: 12px 0; }
 .meta { font-size: 13px; color: var(--muted); }
@@ -86,3 +86,5 @@ tr:last-child td { border-bottom: 0; }
 }
 
 .interp { margin-bottom: 10px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--code-bg); border-radius: 4px; font-size: 14px; }
+.alert.warn { margin-bottom: 10px; }
+.alert.warn ul { margin: 6px 0 0; padding-left: 18px; }

@@ -39,3 +39,9 @@ def test_demo_rules_only_in_demo_prompt():
     from text2sql.prompt import build_prompt
     plain, demo = build_prompt("q", "v3"), build_prompt("q", "v3", api.DEMO_RULES)
     assert "Output rules" not in plain and demo.endswith("## Question\nq")
+
+
+def test_lint_warnings_in_response(client, monkeypatch):
+    monkeypatch.setattr(api, "GOLDEN", {"2017년 매출은?": "SELECT SUM(payment_value) FROM order_payments"})
+    r = client.post("/api/ask", json={"question": "2017년 매출은?"}).json()
+    assert r["rows"] and len(r["warnings"]) == 2

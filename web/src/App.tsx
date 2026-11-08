@@ -72,6 +72,12 @@ export default function App() {
       {result && (
         <section className="result">
           {result.interpretation && <div className="interp">해석: {result.interpretation}</div>}
+          {result.warnings.length > 0 && (
+            <div className="alert warn">
+              결과가 틀렸을 수 있어요
+              <ul>{result.warnings.map((w) => <li key={w}>{w}</li>)}</ul>
+            </div>
+          )}
           {result.sql && (
             <details open>
               <summary>생성된 SQL</summary>
