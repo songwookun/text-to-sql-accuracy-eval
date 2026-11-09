@@ -216,3 +216,139 @@ JOIN product_category_name_translation AS t
 GROUP BY t.product_category_name_english
 ORDER BY product_count DESC
 LIMIT 5;",correct,,
+2026-11-09,2,Q08,2,,리뷰 1점을 받은 주문들은 주문 상태별로 몇 건씩이야?,"SELECT
+  t1.order_status,
+  COUNT(DISTINCT t1.order_id)
+FROM orders AS t1
+JOIN order_reviews AS t2
+  ON t1.order_id = t2.order_id
+WHERE
+  t2.review_score = 1
+GROUP BY
+  t1.order_status",correct,,
+2026-11-09,2,Q09,2,,평균 배송비가 가장 비싼 판매자 주(state) 상위 3개는?,"SELECT
+  t2.seller_state,
+  AVG(t1.freight_value) AS avg_freight
+FROM order_items AS t1
+JOIN sellers AS t2
+  ON t1.seller_id = t2.seller_id
+GROUP BY
+  t2.seller_state
+ORDER BY
+  avg_freight DESC
+LIMIT 3;",correct,,
+2026-11-09,2,Q10,2,,지난달 결제 수단별 결제 금액 합계 알려줘,"SELECT
+  t2.payment_type,
+  SUM(t2.payment_value) AS total_payment_amount
+FROM orders AS t1
+JOIN order_payments AS t2
+  ON t1.order_id = t2.order_id
+WHERE strftime('%Y-%m', t1.order_purchase_timestamp) = '2018-07'
+GROUP BY t2.payment_type",correct,,
+2026-11-09,2,Q11,2,,2018년 상반기 월별 배송 완료 주문의 매출은?,"SELECT
+  strftime('%Y-%m', t1.order_purchase_timestamp) AS month,
+  SUM(t2.price) AS revenue
+FROM orders AS t1
+JOIN order_items AS t2
+  ON t1.order_id = t2.order_id
+WHERE t1.order_status = 'delivered'
+  AND strftime('%Y-%m', t1.order_purchase_timestamp) BETWEEN '2018-01' AND '2018-06'
+GROUP BY month
+ORDER BY month;",correct,,
+2026-11-09,2,Q12,3,,2018년 카테고리별 매출 상위 10개를 영어 카테고리명으로 보여줘,"SELECT
+  t.product_category_name_english,
+  SUM(oi.price) AS revenue
+FROM orders AS o
+JOIN order_items AS oi ON o.order_id = oi.order_id
+JOIN products AS p ON oi.product_id = p.product_id
+JOIN product_category_name_translation AS t ON p.product_category_name = t.product_category_name
+WHERE o.order_status = 'delivered'
+  AND strftime('%Y', o.order_purchase_timestamp) = '2018'
+GROUP BY t.product_category_name_english
+ORDER BY revenue DESC
+LIMIT 10;",correct,,
+2026-11-09,2,Q13,3,,"상파울루(SP) 고객들이 가장 많이 산 카테고리 상위 5개는? 영어 이름으로, 팔린 상품 개수 기준","SELECT
+  t5.product_category_name_english,
+  COUNT(t3.order_item_id) AS product_count
+FROM customers AS t1
+JOIN orders AS t2
+  ON t1.customer_id = t2.customer_id
+JOIN order_items AS t3
+  ON t2.order_id = t3.order_id
+JOIN products AS t4
+  ON t3.product_id = t4.product_id
+JOIN product_category_name_translation AS t5
+  ON t4.product_category_name = t5.product_category_name
+WHERE
+  t1.customer_state = 'SP'
+GROUP BY
+  t5.product_category_name_english
+ORDER BY
+  product_count DESC
+LIMIT 5",correct,,
+2026-11-09,2,Q14,3,,판매자 주(state)별 매출 상위 5개는?,"SELECT
+  t1.seller_state,
+  SUM(t2.price) AS revenue
+FROM sellers AS t1
+JOIN order_items AS t2
+  ON t1.seller_id = t2.seller_id
+JOIN orders AS t3
+  ON t2.order_id = t3.order_id
+WHERE
+  t3.order_status = 'delivered'
+GROUP BY
+  t1.seller_state
+ORDER BY
+  revenue DESC
+LIMIT 5",correct,,
+2026-11-09,2,Q15,3,,2018년에 상파울루(SP) 판매자가 리우데자네이루(RJ) 고객에게 판 상품은 몇 개야?,"SELECT
+  COUNT(t1.order_item_id)
+FROM
+  order_items t1
+  JOIN orders t2 ON t1.order_id = t2.order_id
+  JOIN customers t3 ON t2.customer_id = t3.customer_id
+  JOIN sellers t4 ON t1.seller_id = t4.seller_id
+WHERE
+  t4.seller_state = 'SP'
+  AND t3.customer_state = 'RJ'
+  AND strftime('%Y', t2.order_purchase_timestamp) = '2018'",correct,,
+2026-11-09,2,Q16,3,,건강·뷰티 카테고리 상품의 2018년 매출은 얼마야?,"SELECT
+  SUM(oi.price)
+FROM orders o
+JOIN order_items oi ON o.order_id = oi.order_id
+JOIN products p ON oi.product_id = p.product_id
+JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name
+WHERE o.order_status = 'delivered'
+  AND strftime('%Y', o.order_purchase_timestamp) = '2018'
+  AND t.product_category_name_english = 'health_beauty'",correct,,
+2026-11-09,2,Q17,4,dup_join,바우처로 결제된 배송 완료 주문들의 매출 합계는?,"SELECT
+  SUM(T1.price)
+FROM order_items AS T1
+JOIN orders AS T2
+  ON T1.order_id = T2.order_id
+WHERE T2.order_status = 'delivered'
+  AND T2.order_id IN (
+    SELECT order_id
+    FROM order_payments
+    WHERE payment_type = 'voucher'
+  );",correct,,
+2026-11-09,2,Q18,4,unique_id,2018년에 주문한 고객은 몇 명이야?,"SELECT
+  COUNT(DISTINCT T2.customer_unique_id)
+FROM orders AS T1
+INNER JOIN customers AS T2
+  ON T1.customer_id = T2.customer_id
+WHERE
+  strftime('%Y', T1.order_purchase_timestamp) = '2018'",correct,,
+2026-11-09,2,Q19,4,biz_term,2017년 매출은 얼마야?,"SELECT
+  SUM(t2.price)
+FROM orders AS t1
+JOIN order_items AS t2
+  ON t1.order_id = t2.order_id
+WHERE
+  t1.order_status = 'delivered'
+  AND strftime('%Y', t1.order_purchase_timestamp) = '2017'",correct,,
+2026-11-09,2,Q20,4,empty_ok,2019년에 들어온 주문 목록 보여줘,"SELECT
+  *
+FROM orders
+WHERE
+  strftime('%Y', order_purchase_timestamp) = '2019'",correct,,
