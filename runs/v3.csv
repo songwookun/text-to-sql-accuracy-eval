@@ -1,0 +1,46 @@
+date,run,id,level,trap,question,pred_sql,label,detail,failure_type
+2026-11-11,1,Q01,1,,배송 완료된 주문은 몇 건이야?,SELECT COUNT(DISTINCT order_id) FROM orders WHERE order_status = 'delivered',correct,,
+2026-11-11,1,Q02,1,,결제 수단별로 결제가 몇 건씩 있었어?,"SELECT payment_type, COUNT(*) FROM order_payments GROUP BY payment_type",correct,,
+2026-11-11,1,Q03,1,,리뷰 평균 점수가 몇 점이야?,SELECT AVG(review_score) FROM order_reviews,correct,,
+2026-11-11,1,Q04,1,,2017년에 들어온 주문은 몇 건이야?,"SELECT COUNT(order_id)
+FROM orders
+WHERE strftime('%Y', order_purchase_timestamp) = '2017'",correct,,
+2026-11-11,1,Q05,1,,판매자가 가장 많은 주(state) 상위 3개 알려줘,"SELECT seller_state, COUNT(DISTINCT seller_id)
+FROM sellers
+GROUP BY seller_state
+ORDER BY COUNT(DISTINCT seller_id) DESC
+LIMIT 3",correct,,
+2026-11-11,1,Q06,2,,주문이 가장 많이 들어온 고객 주(state) 상위 5개는?,"SELECT
+  c.customer_state,
+  COUNT(o.order_id) AS order_count
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY c.customer_state
+ORDER BY order_count DESC
+LIMIT 5",correct,,
+2026-11-11,1,Q07,2,,상품이 가장 많이 등록된 카테고리 상위 5개를 영어 이름으로 보여줘,"SELECT
+  t.product_category_name_english,
+  COUNT(p.product_id)
+FROM products p
+JOIN product_category_name_translation t
+  ON p.product_category_name = t.product_category_name
+GROUP BY
+  t.product_category_name_english
+ORDER BY
+  COUNT(p.product_id) DESC
+LIMIT 5",correct,,
+2026-11-11,1,Q08,2,,리뷰 1점을 받은 주문들은 주문 상태별로 몇 건씩이야?,"SELECT
+  o.order_status,
+  COUNT(DISTINCT o.order_id)
+FROM orders o
+JOIN order_reviews r ON o.order_id = r.order_id
+WHERE r.review_score = 1
+GROUP BY o.order_status",correct,,
+2026-11-11,1,Q09,2,,평균 배송비가 가장 비싼 판매자 주(state) 상위 3개는?,"SELECT
+  s.seller_state,
+  AVG(i.freight_value) AS avg_freight
+FROM order_items i
+JOIN sellers s ON i.seller_id = s.seller_id
+GROUP BY s.seller_state
+ORDER BY avg_freight DESC
+LIMIT 3;",correct,,
