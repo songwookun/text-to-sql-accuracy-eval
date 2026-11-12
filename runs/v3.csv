@@ -44,3 +44,93 @@ JOIN sellers s ON i.seller_id = s.seller_id
 GROUP BY s.seller_state
 ORDER BY avg_freight DESC
 LIMIT 3;",correct,,
+2026-11-12,1,Q10,2,,지난달 결제 수단별 결제 금액 합계 알려줘,"SELECT
+  op.payment_type,
+  SUM(op.payment_value)
+FROM orders o
+JOIN order_payments op ON o.order_id = op.order_id
+WHERE strftime('%Y-%m', o.order_purchase_timestamp) = '2018-07'
+GROUP BY op.payment_type",correct,,
+2026-11-12,1,Q11,2,,2018년 상반기 월별 배송 완료 주문의 매출은?,"SELECT
+  strftime('%Y-%m', o.order_purchase_timestamp) AS month,
+  ROUND(SUM(i.price), 2) AS revenue
+FROM orders o
+JOIN order_items i ON o.order_id = i.order_id
+WHERE o.order_status = 'delivered'
+  AND strftime('%Y-%m', o.order_purchase_timestamp) BETWEEN '2018-01' AND '2018-06'
+GROUP BY month
+ORDER BY month;",correct,,
+2026-11-12,1,Q12,3,,2018년 카테고리별 매출 상위 10개를 영어 카테고리명으로 보여줘,"SELECT
+  t.product_category_name_english,
+  SUM(i.price) AS revenue
+FROM orders o
+JOIN order_items i ON o.order_id = i.order_id
+JOIN products p ON i.product_id = p.product_id
+JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name
+WHERE o.order_status = 'delivered'
+  AND strftime('%Y', o.order_purchase_timestamp) = '2018'
+GROUP BY t.product_category_name_english
+ORDER BY revenue DESC
+LIMIT 10",correct,,
+2026-11-12,1,Q13,3,,"상파울루(SP) 고객들이 가장 많이 산 카테고리 상위 5개는? 영어 이름으로, 팔린 상품 개수 기준","SELECT
+  t.product_category_name_english,
+  COUNT(*) AS item_count
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_items i ON o.order_id = i.order_id
+JOIN products p ON i.product_id = p.product_id
+JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name
+WHERE c.customer_state = 'SP'
+GROUP BY t.product_category_name_english
+ORDER BY item_count DESC
+LIMIT 5",correct,,
+2026-11-12,1,Q14,3,,판매자 주(state)별 매출 상위 5개는?,"SELECT
+  s.seller_state,
+  ROUND(SUM(i.price), 2) AS total_revenue
+FROM order_items i
+JOIN orders o ON i.order_id = o.order_id
+JOIN sellers s ON i.seller_id = s.seller_id
+WHERE o.order_status = 'delivered'
+GROUP BY s.seller_state
+ORDER BY total_revenue DESC
+LIMIT 5",correct,,
+2026-11-12,1,Q15,3,,2018년에 상파울루(SP) 판매자가 리우데자네이루(RJ) 고객에게 판 상품은 몇 개야?,"SELECT COUNT(*)
+FROM order_items i
+JOIN orders o ON i.order_id = o.order_id
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN sellers s ON i.seller_id = s.seller_id
+WHERE strftime('%Y', o.order_purchase_timestamp) = '2018'
+  AND s.seller_state = 'SP'
+  AND c.customer_state = 'RJ'",correct,,
+2026-11-12,1,Q16,3,,건강·뷰티 카테고리 상품의 2018년 매출은 얼마야?,"SELECT
+  ROUND(SUM(i.price), 2)
+FROM orders o
+JOIN order_items i ON o.order_id = i.order_id
+JOIN products p ON i.product_id = p.product_id
+JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name
+WHERE o.order_status = 'delivered'
+  AND t.product_category_name_english = 'health_beauty'
+  AND strftime('%Y', o.order_purchase_timestamp) = '2018'",correct,,
+2026-11-12,1,Q17,4,dup_join,바우처로 결제된 배송 완료 주문들의 매출 합계는?,"SELECT ROUND(SUM(i.price), 2)
+FROM orders o
+JOIN order_items i ON o.order_id = i.order_id
+WHERE o.order_status = 'delivered'
+  AND o.order_id IN (
+    SELECT order_id
+    FROM order_payments
+    WHERE payment_type = 'voucher'
+  )",correct,,
+2026-11-12,1,Q18,4,unique_id,2018년에 주문한 고객은 몇 명이야?,"SELECT
+  COUNT(DISTINCT c.customer_unique_id)
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+WHERE strftime('%Y', o.order_purchase_timestamp) = '2018'",correct,,
+2026-11-12,1,Q19,4,biz_term,2017년 매출은 얼마야?,"SELECT ROUND(SUM(i.price), 2)
+FROM orders o
+JOIN order_items i ON o.order_id = i.order_id
+WHERE o.order_status = 'delivered'
+  AND strftime('%Y', o.order_purchase_timestamp) = '2017'",correct,,
+2026-11-12,1,Q20,4,empty_ok,2019년에 들어온 주문 목록 보여줘,"SELECT * FROM orders WHERE strftime('%Y', order_purchase_timestamp) = '2019'",correct,,
+2026-11-12,2,Q01,1,,배송 완료된 주문은 몇 건이야?,SELECT COUNT(DISTINCT order_id) FROM orders WHERE order_status = 'delivered',correct,,
+2026-11-12,2,Q02,1,,결제 수단별로 결제가 몇 건씩 있었어?,"SELECT payment_type, COUNT(*) FROM order_payments GROUP BY payment_type",correct,,
+2026-11-12,2,Q03,1,,리뷰 평균 점수가 몇 점이야?,"SELECT ROUND(AVG(review_score), 2) FROM order_reviews",correct,,
