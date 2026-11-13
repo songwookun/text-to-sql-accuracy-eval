@@ -8,10 +8,12 @@ from fastapi import FastAPI
 from google.genai import errors
 from pydantic import BaseModel, Field
 
+from text2sql.catalog import terms_prompt
 from text2sql.executor import QueryTimeout, query
 from text2sql.guard import UnsafeSQLError, guard
 from text2sql.lint import lint
 from text2sql.llm import MODEL, generate_sql
+from text2sql.profile import profile_columns
 from text2sql.prompt import build_prompt
 
 load_dotenv()
@@ -31,7 +33,12 @@ DEMO_RULES = """## Output rules
 - Give every computed column a short snake_case alias."""
 MOCK_FALLBACK = "SELECT order_status, COUNT(*) AS orders FROM orders GROUP BY order_status ORDER BY orders DESC"
 
-app = FastAPI(title="text-to-sql demo")
+
+def demo_extra() -> str:
+    return "\n\n".join([DEMO_RULES, terms_prompt(), profile_columns()])
+
+
+app =FastAPI(title="text-to-sql demo")
 
 
 def split_interpretation(sql: str) -> tuple[str, str]:
@@ -76,7 +83,7 @@ def ask(req: AskRequest):
     res = AskResponse(question=q, model="mock" if MOCK_LLM else MODEL, version=PROMPT_VERSION, mock=MOCK_LLM)
 
     try:
-        raw = GOLDEN.get(q, MOCK_FALLBACK) if MOCK_LLM else generate_sql(build_prompt(q, PROMPT_VERSION, DEMO_RULES))
+        raw = GOLDEN.get(q, MOCK_FALLBACK) if MOCK_LLM else generate_sql(build_prompt(q, PROMPT_VERSION, demo_extra()))
         res.interpretation, res.sql = split_interpretation(raw)
     except errors.ClientError as e:
         res.error_type = "quota" if e.code == 429 else "llm"

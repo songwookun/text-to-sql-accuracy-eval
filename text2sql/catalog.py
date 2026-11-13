@@ -30,3 +30,15 @@ METRICS = {
         "filter": ("orders", "order_status", "delivered"),
     },
 }
+
+# 데모 전용 업무 정의 (실험 V0~V3 프롬프트엔 안 들어감)
+DEMO_TERMS = {
+    "Late delivery (배송 지연)": "delivered orders where date(order_delivered_customer_date) > date(order_estimated_delivery_date). Compare dates, not timestamps.",
+    "Average order value (객단가)": "revenue / number of orders, both over delivered orders.",
+    "Repeat customer (재구매 고객)": "customer_unique_id with 2 or more distinct order_id.",
+    "Cancellation rate (취소율)": "COUNT(DISTINCT order_id) with order_status = 'canceled' / COUNT(DISTINCT order_id) of all orders.",
+}
+
+
+def terms_prompt() -> str:
+    return "## More business terms\n" + "\n".join(f"- {k}: {v}" for k, v in DEMO_TERMS.items())
