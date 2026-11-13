@@ -83,6 +83,29 @@
 - **V2의 오답 2건은 프롬프트 탓이 아니라 비결정성.** `temperature=0`인데도 서로 다른 회차·문항에서 개수 컬럼을 빼먹었고, 같은 문항이 다른 회차에선 정답이었습니다. 컬럼 하나 차이를 허용하는 "너그러운 채점"으로는 V1~V3 모두 100%.
 - **정적 검사(lint)로 조용한 오답을 실행 전에 잡을 수 있다.** 테이블 관계·지표 정의를 담은 `catalog.py`를 기준으로 1:N 중복 조인, 지표 식 위반, 필터 누락을 검사한 결과 V0 진짜 오답 13/13 탐지, 정답 오탐 0건. 단, 규칙을 V0 오답을 보고 만들었으므로 탐지율은 과대평가돼 있습니다.
 
+### 골든셋 밖 검증: "예정일보다 늦게 배송된 주문 비율은?"
+
+실험이 끝난 뒤 데모(V3)에 정의되지 않은 지표를 물어봤습니다.
+
+- 모델의 해석: "배송 완료된 주문 중 실제 배송일이 예정일보다 늦은 주문의 비율" — **의도와 정확히 같음**
+- 결과: **8.11%** — 에러 없음, lint 경고 없음
+- 실제: **6.77%**. 예정일 컬럼은 시각 없이 날짜만(`00:00:00`) 들어 있는데, 시각이 있는 배송일과 그대로 비교해서 **예정일 당일에 도착한 1,292건을 "지연"으로 셈** → 지연율이 약 20% 부풀려짐
+
+해석 문장도 맞고, 실행도 되고, 정적 검사도 통과했지만 숫자가 틀렸습니다. V0에서 본 것과 같은 패턴이 골든셋 밖에서도 재현됐습니다. 예시를 하나 더 넣는 대신 "예정일은 날짜만 있음"(데이터 특징)과 "지연 = 날짜 기준 비교"(업무 정의) 두 줄을 적어야 같은 개념이 들어간 질문 전체가 고쳐집니다.
+
+### 실무에 적용하려면
+
+데이터에 관한 모든 것을 프롬프트에 넣을 수는 없습니다. 이 실험에서 얻은 결론을 실무 구조로 옮기면 다음과 같습니다.
+
+1. **자주 쓰는 지표부터 정의한다.** 실제 질문은 매출·주문 수·고객 수·지연율 같은 지표 수십 개에 몰립니다. 이 실험에서는 정의 4개로 60% → 100%가 됐습니다. 이 정의는 대시보드에도 필요한, 원래 정해 둬야 하는 것입니다.
+2. **데이터 특징은 자동으로 뽑는다.** 컬럼별 샘플 값·형식·NULL 비율을 프로파일링해 프롬프트에 붙이면, "날짜만 들어 있는 컬럼" 같은 함정을 사람이 일일이 찾지 않아도 됩니다.
+3. **정의 밖 질문은 모른다고 하거나 되묻는다.** 그럴듯한 오답보다 "이 지표는 정의돼 있지 않아 이렇게 해석했습니다, 맞나요?"가 낫습니다. 정의된 지표 안에서만 SQL을 조립하는 시맨틱 레이어(dbt Semantic Layer, Cube 등)가 이 방향의 극단입니다.
+4. **틀린 사례를 골든셋에 쌓는다.** 오답이 나올 때마다 정의를 추가하고 그 문항을 골든셋에 넣어 두면, 프롬프트나 모델을 바꿀 때 다시 틀리는지 자동으로 확인할 수 있습니다.
+
+```
+지표 정의 → 서비스 → 오답 발견 → 정의·데이터 특징 추가 → 골든셋에 문항 추가 → (회귀 검증) → …
+```
+
 ### 한계
 
 - **골든셋이 작다 (20문항).** 100%의 95% 신뢰구간 하한이 91%이고, V1~V3 차이는 통계적으로 구분되지 않습니다.
@@ -205,6 +228,29 @@ Failure types (18 total)
 Additional observations
 - **V2's two failures look like nondeterminism, not the prompt.** Even at `temperature=0`, a count column was dropped on different runs and questions, while the same question passed on the other run. With lenient scoring (allowing a missing column), V1–V3 are all 100%.
 - **Static checks can catch silent errors before execution.** A lint pass driven by `catalog.py` (table relationships and metric definitions) flags 1:N fan-out joins, metric-expression violations and missing filters: 13/13 genuine V0 errors detected, 0 false positives on correct answers. Since the rules were written after seeing V0's failures, the detection rate is optimistic.
+
+### Beyond the golden set: "What share of orders arrived after the estimated date?"
+
+After the experiment, we asked the demo (V3) about a metric that was never defined.
+
+- Model's interpretation: "share of delivered orders whose actual delivery date is later than the estimated date" — **exactly the intent**
+- Result: **8.11%** — no error, no lint warning
+- Actual: **6.77%**. The estimated-date column holds dates only (`00:00:00`), but it was compared directly with the delivery timestamp, so **1,292 orders delivered on the estimated day were counted as late** — inflating the late rate by about 20%
+
+The interpretation was right, the query ran, and the static check passed — yet the number was wrong. The same pattern seen in V0 reappeared outside the golden set. Instead of adding another example, two lines fix every question involving this concept: "the estimated date has no time part" (data quirk) and "late = compare by date" (business definition).
+
+### Applying this in practice
+
+You cannot put everything about the data into a prompt. Turning these findings into a working setup looks like this:
+
+1. **Define the metrics people actually ask about.** Real questions cluster around a few dozen metrics — revenue, orders, customers, late rate. Here, 4 definitions took accuracy from 60% to 100%. These are definitions a dashboard needs anyway.
+2. **Extract data quirks automatically.** Profiling each column (sample values, format, null ratio) and attaching it to the prompt catches traps like "date-only column" without humans hunting for them.
+3. **Say "I don't know" or ask back outside the definitions.** "This metric isn't defined, so I read it as X — is that right?" beats a plausible wrong number. A semantic layer (dbt Semantic Layer, Cube, …) that only assembles SQL from defined metrics is the far end of this approach.
+4. **Grow the golden set from failures.** Each wrong answer becomes a new definition plus a new golden question, so any later prompt or model change is automatically checked for regressions.
+
+```
+define metrics → serve → find a wrong answer → add definition / data quirk → add golden question → (regression check) → …
+```
 
 ### Limitations
 
