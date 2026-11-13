@@ -106,12 +106,35 @@
 지표 정의 → 서비스 → 오답 발견 → 정의·데이터 특징 추가 → 골든셋에 문항 추가 → (회귀 검증) → …
 ```
 
+### 데모에 구현한 실무 장치
+
+위 네 가지를 데모(`api.py`, `web/`)에 실제로 넣었습니다. **실험용 V0~V3 프롬프트는 그대로 두고** 데모에만 덧붙이므로 실험 결과는 재현됩니다.
+
+| | 장치 | 동작 |
+|---|---|---|
+| A | 업무 정의 확장 (`catalog.DEMO_TERMS`) | 배송 지연·객단가·재구매·취소율·이탈·비율 단위 정의를 프롬프트에 추가. 정의 추가 = dict 한 줄 |
+| B | 데이터 프로파일링 (`text2sql/profile.py`) | 컬럼별 타입·NULL 비율·값 목록·날짜 형식을 DB에서 자동 추출. "99% 이상 00:00:00이면 날짜만"(서머타임 흔적 85건 허용) |
+| C | 정의 밖 지표 표시 | 모델이 SQL 위에 `-- 정의 밖: 고객 이탈률`로 스스로 보고 → 화면에 "해석을 확인하세요" 경고 |
+| D | 피드백 → 회귀 셋 | 화면 "틀렸어요" → 올바른 SQL 저장(실행 검증 후 `regression.jsonl`) → `regress.py`가 데모 조건으로 재채점 |
+
+**루프가 실제로 한 바퀴 돈 기록 — R001 "고객 이탈률은?"**
+
+| 단계 | 결과 |
+|---|---|
+| 화면 질문 | 모델이 "1회 구매 고객 비율"로 직접 정의 → 96.88%, 정의 밖 경고 표시 → "틀렸어요"로 정답(최근 6개월 구매 없음, 59.13%) 저장 |
+| 회귀 1차 | **error** — 이번엔 6개월 기준으로 해석했지만 별칭 오타. 같은 프롬프트에서도 해석이 흔들림 |
+| 이탈 정의 추가 → 2차 | **silent_wrong** — 로직은 같아졌지만 0.5913 vs 59.13 (단위) |
+| "비율은 0~100%" 규칙 추가 → 3차 | **correct** |
+
+정의 하나로 끝나지 않았습니다. "이탈"의 기준 아래에 "비율을 어떤 단위로 쓰는가" 같은 숨은 관례가 하나 더 있었고, 회귀 셋이 그것을 드러냈습니다. 배송 지연율도 A+B 적용 후 같은 질문에 6.77%(정답)로 바뀌었습니다.
+
 ### 한계
 
 - **골든셋이 작다 (20문항).** 100%의 95% 신뢰구간 하한이 91%이고, V1~V3 차이는 통계적으로 구분되지 않습니다.
 - **천장 효과.** V1에서 이미 만점이라 조인 메모·예시의 효과를 잴 수 없었습니다. 더 어려운 문항(복잡한 조인, 애매한 지표)이 있어야 비교가 가능합니다.
 - **정의를 아는 쪽이 채점한다.** V1에 넣은 업무 정의는 정답 SQL을 쓸 때 쓴 정의와 같습니다. 이것은 결함이라기보다 요점입니다 — "정답"은 조직의 정의에 달려 있고, 그 정의를 모델에게 알려 주지 않으면 맞힐 수 없습니다.
 - 모델 1개(Gemini Flash), 데이터셋 1개, 무료 티어 한도 때문에 버전당 2회만 반복했습니다.
+- **데모 실무 장치는 사례 단위로만 확인했습니다.** 정의 밖 경고는 모델의 자기 보고라 놓칠 수 있고, 피드백은 승인 단계 없이 저장되며, 프로파일의 샘플 값이 LLM으로 전송되므로 실제 회사 데이터라면 민감 컬럼 마스킹이 필요합니다.
 
 ### 구성
 
@@ -128,10 +151,12 @@
 | `text2sql/guard.py` | sqlglot으로 단일 SELECT만 허용, 허용 테이블 확인, `LIMIT` 강제 |
 | `text2sql/executor.py` | 읽기 전용 연결 + 실행 시간 제한 |
 | `text2sql/scorer.py` | 실행 결과 비교 채점 (엄격 / 너그러운) |
-| `text2sql/catalog.py`, `lint.py` | 테이블 관계·지표 정의, 실행 전 위험 패턴 검사 |
+| `text2sql/catalog.py`, `lint.py` | 테이블 관계·지표 정의(데모용 DEMO_TERMS 포함), 실행 전 위험 패턴 검사 |
+| `text2sql/profile.py` | 컬럼 프로파일 자동 추출 (데모 프롬프트용) |
 | `run.py` | 실험 실행 (일일 한도에 걸리면 저장 후 중단, 다음 실행 때 이어서) |
 | `report.py` | `runs/*.csv` → `runs/report.md` |
-| `api.py`, `web/` | 데모: FastAPI + React. 질문 → SQL·해석·lint 경고·결과 표 |
+| `api.py`, `web/` | 데모: FastAPI + React. 질문 → SQL·해석·정의 밖 경고·lint 경고·결과 표, "틀렸어요" 피드백 |
+| `regression.jsonl`, `regress.py` | 실무 피드백 회귀 셋과 재채점 (`runs/regression.csv`) |
 
 ### 실행 방법
 
@@ -143,7 +168,8 @@ cp .env.example .env            # GEMINI_API_KEY 입력
 
 uv run python run.py --version v1   # 실험 (--runs 기본 2)
 uv run python report.py             # runs/report.md 갱신
-uv run pytest                       # 테스트 99개
+uv run python regress.py            # 회귀 셋 재채점 (문항 수만큼 호출)
+uv run pytest                       # 테스트 110개
 
 # 데모
 uv run uvicorn api:app --reload     # :8000
@@ -252,12 +278,35 @@ You cannot put everything about the data into a prompt. Turning these findings i
 define metrics → serve → find a wrong answer → add definition / data quirk → add golden question → (regression check) → …
 ```
 
+### Practical safeguards built into the demo
+
+The four ideas above are implemented in the demo (`api.py`, `web/`). **The experiment prompts V0–V3 are untouched** — everything is appended only for the demo, so the experiment stays reproducible.
+
+| | Safeguard | What it does |
+|---|---|---|
+| A | More business definitions (`catalog.DEMO_TERMS`) | Late delivery, average order value, repeat customer, cancellation rate, churn, and rate units added to the prompt. Adding a definition = one dict line |
+| B | Data profiling (`text2sql/profile.py`) | Per-column type, null ratio, value list and date format extracted from the DB. "≥99% at 00:00:00 → date only" (tolerates 85 DST-shifted rows) |
+| C | Flag undefined metrics | The model self-reports `-- 정의 밖: <metric>` above the SQL → the UI shows "check the interpretation" |
+| D | Feedback → regression set | UI "this is wrong" → corrected SQL saved after execution check (`regression.jsonl`) → `regress.py` re-scores under demo conditions |
+
+**One full turn of the loop — R001 "What is the customer churn rate?"**
+
+| Step | Outcome |
+|---|---|
+| Asked in the UI | Model defined churn as "customers with one purchase" → 96.88%, undefined-metric warning shown → corrected answer (no purchase in last 6 months, 59.13%) saved |
+| Regression run 1 | **error** — this time it used the 6-month rule but mistyped an alias. Same prompt, different interpretation |
+| Add churn definition → run 2 | **silent_wrong** — same logic, but 0.5913 vs 59.13 (units) |
+| Add "rates as 0–100%" rule → run 3 | **correct** |
+
+One definition was not enough: beneath "churn" sat another unwritten convention — how rates are expressed — and the regression set surfaced it. The late-delivery question also returned the correct 6.77% after A+B.
+
 ### Limitations
 
 - **Small golden set (20 questions).** The lower bound of the 95% CI at 100% is 91%; V1–V3 are not statistically distinguishable.
 - **Ceiling effect.** V1 already scores 100%, so the value of join notes and examples could not be measured. Harder questions (complex joins, ambiguous metrics) are needed.
 - **The grader knows the definitions.** The business definitions in V1 are the same ones used to write the gold SQL. That is less a flaw than the point: the "right answer" depends on the organization's definitions, and a model cannot get it right unless it is told them.
 - One model (Gemini Flash), one dataset, and only 2 runs per version due to free-tier quotas.
+- **The demo safeguards were checked case by case only.** Undefined-metric flags rely on the model's self-report and can be missed, feedback is saved without an approval step, and profile sample values are sent to the LLM — real company data would need masking of sensitive columns.
 
 ### Structure
 
@@ -274,10 +323,12 @@ define metrics → serve → find a wrong answer → add definition / data quirk
 | `text2sql/guard.py` | sqlglot: single SELECT only, allowed tables, enforced `LIMIT` |
 | `text2sql/executor.py` | Read-only connection + query timeout |
 | `text2sql/scorer.py` | Execution-result scoring (strict / lenient) |
-| `text2sql/catalog.py`, `lint.py` | Table relationships & metric definitions, pre-execution risk checks |
+| `text2sql/catalog.py`, `lint.py` | Table relationships & metric definitions (incl. demo DEMO_TERMS), pre-execution risk checks |
+| `text2sql/profile.py` | Automatic column profile (for the demo prompt) |
 | `run.py` | Runs the experiment (saves and stops on daily quota, resumes next time) |
 | `report.py` | `runs/*.csv` → `runs/report.md` |
-| `api.py`, `web/` | Demo: FastAPI + React. Question → SQL, interpretation, lint warnings, result table |
+| `api.py`, `web/` | Demo: FastAPI + React. Question → SQL, interpretation, undefined-metric and lint warnings, result table, "this is wrong" feedback |
+| `regression.jsonl`, `regress.py` | Regression set from user feedback and its re-scoring (`runs/regression.csv`) |
 
 ### Usage
 
@@ -289,7 +340,8 @@ cp .env.example .env            # set GEMINI_API_KEY
 
 uv run python run.py --version v1   # experiment (--runs defaults to 2)
 uv run python report.py             # refresh runs/report.md
-uv run pytest                       # 99 tests
+uv run python regress.py            # re-score the regression set (one call per item)
+uv run pytest                       # 110 tests
 
 # demo
 uv run uvicorn api:app --reload     # :8000
