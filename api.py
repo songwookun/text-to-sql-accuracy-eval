@@ -29,6 +29,7 @@ GOLDEN = {
 # 데모 전용: 해석 한 줄 + 순위 근거 값. 실험(run.py) 조건과 분리
 DEMO_RULES = """## Output rules
 - First line: a SQL comment in Korean saying how you read the question, e.g. -- 해석: 배송 완료 주문 기준, 상품 개수로 셈
+- Second line: a SQL comment listing metrics or terms in the question that are NOT defined in the Business terms sections, which you had to define yourself, e.g. -- 정의 밖: 고객 이탈률. Write -- 정의 밖: 없음 if every term is defined.
 - When ranking or picking top/bottom items, also return the value used for ranking.
 - Give every computed column a short snake_case alias."""
 MOCK_FALLBACK = "SELECT order_status, COUNT(*) AS orders FROM orders GROUP BY order_status ORDER BY orders DESC"
@@ -41,12 +42,17 @@ def demo_extra() -> str:
 app =FastAPI(title="text-to-sql demo")
 
 
-def split_interpretation(sql: str) -> tuple[str, str]:
+def split_comments(sql: str) -> tuple[dict[str, str], str]:
     lines = sql.strip().splitlines()
-    if lines and lines[0].lstrip().startswith("--"):
-        note = lines[0].lstrip()[2:].strip().removeprefix("해석:").strip()
-        return note, "\n".join(lines[1:]).strip()
-    return "", sql.strip()
+    notes = {}
+    while lines and lines[0].lstrip().startswith("--"):
+        key, _, value = lines.pop(0).lstrip()[2:].partition(":")
+        notes[key.strip()] = value.strip()
+    return notes, "\n".join(lines).strip()
+
+
+def parse_terms(value: str) -> list[str]:
+    return [] if value in ("", "없음") else [t.strip() for t in value.split(",") if t.strip()]
 
 
 class AskRequest(BaseModel):
@@ -57,6 +63,7 @@ class AskResponse(BaseModel):
     question: str
     sql: str = ""
     interpretation: str = ""
+    undefined_terms: list[str] = []
     warnings: list[str] = []
     columns: list[str] = []
     rows: list[list] = []
@@ -84,7 +91,9 @@ def ask(req: AskRequest):
 
     try:
         raw = GOLDEN.get(q, MOCK_FALLBACK) if MOCK_LLM else generate_sql(build_prompt(q, PROMPT_VERSION, demo_extra()))
-        res.interpretation, res.sql = split_interpretation(raw)
+        notes, res.sql = split_comments(raw)
+        res.interpretation = notes.get("해석", "")
+        res.undefined_terms = parse_terms(notes.get("정의 밖", ""))
     except errors.ClientError as e:
         res.error_type = "quota" if e.code == 429 else "llm"
         if e.code != 429:

@@ -30,9 +30,21 @@ def test_empty_question_rejected(client):
     assert client.post("/api/ask", json={"question": ""}).status_code == 422
 
 
-def test_split_interpretation():
-    assert api.split_interpretation("-- 해석: 상품 개수 기준\nSELECT 1") == ("상품 개수 기준", "SELECT 1")
-    assert api.split_interpretation("SELECT 1") == ("", "SELECT 1")
+def test_split_comments():
+    notes, sql = api.split_comments("-- 해석: 상품 개수 기준\n-- 정의 밖: 고객 이탈률, 활성 판매자\nSELECT 1")
+    assert notes == {"해석": "상품 개수 기준", "정의 밖": "고객 이탈률, 활성 판매자"} and sql == "SELECT 1"
+    assert api.split_comments("SELECT 1") == ({}, "SELECT 1")
+
+
+def test_parse_terms():
+    assert api.parse_terms("고객 이탈률, 활성 판매자") == ["고객 이탈률", "활성 판매자"]
+    assert api.parse_terms("없음") == [] and api.parse_terms("") == []
+
+
+def test_undefined_terms_in_response(client, monkeypatch):
+    monkeypatch.setattr(api, "GOLDEN", {"이탈률은?": "-- 해석: x\n-- 정의 밖: 고객 이탈률\nSELECT 1"})
+    r = client.post("/api/ask", json={"question": "이탈률은?"}).json()
+    assert r["undefined_terms"] == ["고객 이탈률"] and r["interpretation"] == "x" and r["sql"] == "SELECT 1"
 
 
 def test_demo_rules_only_in_demo_prompt():

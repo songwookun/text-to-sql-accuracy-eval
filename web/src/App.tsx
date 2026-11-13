@@ -72,6 +72,12 @@ export default function App() {
       {result && (
         <section className="result">
           {result.interpretation && <div className="interp">해석: {result.interpretation}</div>}
+          {result.undefined_terms.length > 0 && (
+            <div className="alert warn">
+              정의되지 않은 지표를 모델이 직접 해석했어요: <b>{result.undefined_terms.join(', ')}</b>
+              <div>숫자를 쓰기 전에 위 해석과 SQL의 기준이 맞는지 확인하세요.</div>
+            </div>
+          )}
           {result.warnings.length > 0 && (
             <div className="alert warn">
               결과가 틀렸을 수 있어요
