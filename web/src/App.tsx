@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import Feedback from './Feedback'
 import { ask, getExamples, getHealth, type AskResponse, type Health } from './api'
 
 const fmt = (v: unknown) =>
@@ -90,6 +91,7 @@ export default function App() {
               <pre>{result.sql}</pre>
             </details>
           )}
+          {result.sql && <Feedback key={result.question + result.sql} question={result.question} predSql={result.sql} />}
 
           {result.error ? (
             <div className={`alert ${result.error_type}`}>{result.error}</div>

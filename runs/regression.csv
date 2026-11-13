@@ -1,0 +1,8 @@
+date,id,question,pred_sql,label,detail
+2026-11-13,R001,고객 이탈률은?,"SELECT ROUND(100.0 * COUNT(CASE WHEN max_purchase < '2018-03-01' THEN 1 END) / COUNT(*), 2) AS churn_rate
+FROM (
+    SELECT c.customer_unique_id, MAX(o.order_purchase_timestamp) AS max_purchase
+    FROM customers c
+    JOIN orders o ON c.customer_id = o.customer_id
+    GROUP BY c.customer_unique_id
+);",correct,

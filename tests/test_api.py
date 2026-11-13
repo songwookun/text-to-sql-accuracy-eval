@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -57,3 +59,21 @@ def test_lint_warnings_in_response(client, monkeypatch):
     monkeypatch.setattr(api, "GOLDEN", {"2017년 매출은?": "SELECT SUM(payment_value) FROM order_payments"})
     r = client.post("/api/ask", json={"question": "2017년 매출은?"}).json()
     assert r["rows"] and len(r["warnings"]) == 2
+
+
+def test_feedback_saves_valid_sql(client, monkeypatch, tmp_path):
+    path = tmp_path / "regression.jsonl"
+    monkeypatch.setattr(api, "REGRESSION", path)
+    body = {"question": "배송 완료 주문 수", "pred_sql": "SELECT 0", "sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'delivered'"}
+    r1 = client.post("/api/feedback", json=body).json()
+    r2 = client.post("/api/feedback", json=body).json()
+    assert r1["ok"] and r1["id"] == "R001" and r1["rows"] == [[96478]] and r2["id"] == "R002"
+    saved = [json.loads(l) for l in path.read_text().splitlines()]
+    assert saved[0]["question"] == "배송 완료 주문 수" and saved[0]["pred_sql"] == "SELECT 0"
+
+
+def test_feedback_rejects_unsafe_sql(client, monkeypatch, tmp_path):
+    path = tmp_path / "regression.jsonl"
+    monkeypatch.setattr(api, "REGRESSION", path)
+    r = client.post("/api/feedback", json={"question": "q", "sql": "DELETE FROM orders"}).json()
+    assert not r["ok"] and "실행할 수 없어요" in r["error"] and not path.exists()

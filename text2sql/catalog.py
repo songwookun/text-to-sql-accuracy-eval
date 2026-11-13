@@ -37,6 +37,8 @@ DEMO_TERMS = {
     "Average order value (객단가)": "revenue / number of orders, both over delivered orders.",
     "Repeat customer (재구매 고객)": "customer_unique_id with 2 or more distinct order_id.",
     "Cancellation rate (취소율)": "COUNT(DISTINCT order_id) with order_status = 'canceled' / COUNT(DISTINCT order_id) of all orders.",
+    "Rates and ratios (비율·율)": "report as a percentage from 0 to 100, rounded to 2 decimals, e.g. ROUND(100.0 * a / b, 2).",
+    "Churned customer (이탈 고객)": "customer_unique_id whose latest order_purchase_timestamp is before '2018-03-01' (no purchase in the 6 months before today). Churn rate = churned / all customers with at least one order.",
 }
 
 

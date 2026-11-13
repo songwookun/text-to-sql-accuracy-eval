@@ -88,3 +88,13 @@ tr:last-child td { border-bottom: 0; }
 .interp { margin-bottom: 10px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--code-bg); border-radius: 4px; font-size: 14px; }
 .alert.warn { margin-bottom: 10px; }
 .alert.warn ul { margin: 6px 0 0; padding-left: 18px; }
+
+.fb-open { justify-self: start; background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+.fb-open:hover { border-color: var(--accent); color: var(--accent); }
+.feedback { display: grid; gap: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.feedback label { font-size: 13px; color: var(--muted); }
+.feedback textarea, .feedback input { font: inherit; font-size: 13px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--code-bg); color: inherit; }
+.feedback textarea { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical; }
+.feedback button { justify-self: start; padding: 8px 16px; font-size: 14px; font-weight: 600; border: 0; border-radius: 8px; background: var(--accent); color: #fff; cursor: pointer; }
+.feedback button:disabled { opacity: .5; cursor: default; }
+.alert.ok { background: var(--code-bg); color: inherit; border-left: 3px solid var(--accent); }

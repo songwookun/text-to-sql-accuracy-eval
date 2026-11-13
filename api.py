@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -21,6 +22,7 @@ load_dotenv()
 ROOT = Path(__file__).resolve().parent
 PROMPT_VERSION = os.getenv("PROMPT_VERSION", "v3")  # 실험 결과 보고 확정
 MOCK_LLM = os.getenv("MOCK_LLM") == "1"  # 1이면 Gemini 대신 골든셋 SQL 사용 (한도 절약)
+REGRESSION = ROOT / "regression.jsonl"  # 실무 피드백 사례 (골든셋과 분리)
 
 GOLDEN = {
     g["question"]: g["sql"]
@@ -118,3 +120,23 @@ def ask(req: AskRequest):
     except sqlite3.Error as e:
         res.error_type, res.error = "sql", f"SQL 실행 오류: {e}"
     return res
+
+
+class FeedbackRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=500)
+    pred_sql: str = ""
+    sql: str = Field(min_length=1)
+    note: str = ""
+
+
+@app.post("/api/feedback")
+def feedback(req: FeedbackRequest):
+    try:
+        columns, rows = query(guard(req.sql))
+    except (UnsafeSQLError, QueryTimeout, sqlite3.Error) as e:
+        return {"ok": False, "error": f"정답 SQL을 실행할 수 없어요: {e}"}
+    lines = REGRESSION.read_text().splitlines() if REGRESSION.exists() else []
+    item = {"id": f"R{len(lines) + 1:03d}", "date": date.today().isoformat(), **req.model_dump()}
+    with REGRESSION.open("a") as f:
+        f.write(json.dumps(item, ensure_ascii=False) + "\n")
+    return {"ok": True, "id": item["id"], "columns": columns, "rows": [list(r) for r in rows[:20]]}

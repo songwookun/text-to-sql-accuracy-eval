@@ -35,3 +35,15 @@ export async function getExamples(): Promise<string[]> {
   const r = await fetch('/api/examples')
   return r.ok ? r.json() : []
 }
+
+export type FeedbackResponse = { ok: boolean; id?: string; error?: string; columns?: string[]; rows?: unknown[][] }
+
+export async function sendFeedback(body: { question: string; pred_sql: string; sql: string; note: string }): Promise<FeedbackResponse> {
+  const r = await fetch('/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  if (!r.ok) throw new Error(`HTTP ${r.status}`)
+  return r.json()
+}
