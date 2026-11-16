@@ -7,6 +7,8 @@ import sqlglot
 from text2sql.executor import QueryTimeout, execute
 from text2sql.guard import UnsafeSQLError, guard
 
+MAX_ROWS = 1000
+
 
 @dataclass
 class Verdict:
@@ -21,14 +23,22 @@ def normalize(rows: list[tuple], ordered: bool) -> list[tuple]:
     ]
     return out if ordered else sorted(out, key=repr)
 
+# 정답 SQL은 guard 없이 원문 실행. 1,000행 초과면 예측 쪽 LIMIT과 어긋나므로 중단
+def run_gold(gold_sql: str) -> list[tuple]:
+    rows = execute(gold_sql)
+    if len(rows) > MAX_ROWS:
+        raise ValueError(f"gold result {len(rows)} rows > {MAX_ROWS}: 골든셋 원칙 위반")
+    return rows
+
+
 def is_ordered(sql: str) -> bool:
     return sqlglot.parse_one(sql, read="sqlite").args.get("order") is not None
 
 
 def score(gold_sql: str, pred_sql: str) -> Verdict:
-    expected = execute(guard(gold_sql))
+    expected = run_gold(gold_sql)
     try:
-        got = execute(guard(pred_sql))
+        got = execute(guard(pred_sql, MAX_ROWS))
     except (UnsafeSQLError, QueryTimeout, sqlite3.Error) as e:
         return Verdict("error", f"{type(e).__name__}: {e}")
     ordered = is_ordered(gold_sql)
@@ -53,9 +63,9 @@ def same_on_shared_columns(expected: list[tuple], got: list[tuple], ordered: boo
 
 
 def is_lenient_correct(gold_sql: str, pred_sql: str) -> bool:
-    expected = execute(guard(gold_sql))
+    expected = run_gold(gold_sql)
     try:
-        got = execute(guard(pred_sql))
+        got = execute(guard(pred_sql, MAX_ROWS))
     except (UnsafeSQLError, QueryTimeout, sqlite3.Error):
         return False
     return same_on_shared_columns(expected, got, is_ordered(gold_sql))

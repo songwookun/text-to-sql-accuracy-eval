@@ -69,3 +69,8 @@ def test_lenient_q13_names_only():
 def test_lenient_does_not_forgive_wrong_values():
     pred = "SELECT SUM(payment_value) FROM order_payments"
     assert not is_lenient_correct(GOLDEN["Q19"], pred)
+
+
+def test_gold_over_max_rows_raises():
+    with pytest.raises(ValueError):
+        score("SELECT order_id FROM orders", "SELECT order_id FROM orders")
