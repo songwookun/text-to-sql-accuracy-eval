@@ -67,13 +67,15 @@ def main():
                     continue
                 try:
                     sql = call_llm(g["question"], args.version)
-                    v = score(g["sql"], sql)
-                    label, detail = v.label, v.detail
                 except DailyQuotaExceeded:
                     raise
                 # API 실패는 LLM 오답과 분리
                 except Exception as e:
                     sql, label, detail = "", "api_error", f"{type(e).__name__}: {e}"
+                # 정답 SQL 실패는 api_error로 묻지 않고 바로 멈춤
+                else:
+                    v = score(g["sql"], sql)
+                    label, detail = v.label, v.detail
                 rows.append({
                     "date": f"{date.today()}", "run": r, "id": g["id"], "level": g["level"],
                     "trap": g["trap"] or "", "question": g["question"], "pred_sql": sql,
