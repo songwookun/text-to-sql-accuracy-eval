@@ -1,6 +1,6 @@
 import sqlglot
 from sqlglot import exp
-from sqlglot.errors import ParseError
+from sqlglot.errors import SqlglotError
 
 ALLOWED_TABLES = {
     "orders", "order_items", "order_payments", "order_reviews",
@@ -13,7 +13,7 @@ class UnsafeSQLError(ValueError):
 def guard(sql: str, max_rows: int = 1000) -> str:
     try:
         trees = [t for t in sqlglot.parse(sql, read="sqlite") if t is not None]
-    except ParseError as e:
+    except SqlglotError as e:
         raise UnsafeSQLError(f"parse error: {e}") from e
     if len(trees) != 1:
         raise UnsafeSQLError(f"expected 1 statement, got {len(trees)}")
