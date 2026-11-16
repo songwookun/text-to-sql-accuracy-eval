@@ -169,7 +169,7 @@ cp .env.example .env            # GEMINI_API_KEY 입력
 uv run python run.py --version v1   # 실험 (--runs 기본 2)
 uv run python report.py             # runs/report.md 갱신
 uv run python regress.py            # 회귀 셋 재채점 (문항 수만큼 호출)
-uv run pytest                       # 테스트 110개
+uv run pytest                       # 테스트
 
 # 데모
 uv run uvicorn api:app --reload     # :8000
@@ -341,7 +341,7 @@ cp .env.example .env            # set GEMINI_API_KEY
 uv run python run.py --version v1   # experiment (--runs defaults to 2)
 uv run python report.py             # refresh runs/report.md
 uv run python regress.py            # re-score the regression set (one call per item)
-uv run pytest                       # 110 tests
+uv run pytest                       # tests
 
 # demo
 uv run uvicorn api:app --reload     # :8000
