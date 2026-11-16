@@ -19,25 +19,30 @@ FIELDS = ["date", "id", "question", "pred_sql", "label", "detail"]
 def main():
     items = [json.loads(l) for l in REGRESSION.read_text().splitlines()] if REGRESSION.exists() else []
     rows = []
-    for i, it in enumerate(items):
-        if i:
-            time.sleep(CALL_INTERVAL)
-        try:
-            _, sql = split_comments(generate_sql(build_prompt(it["question"], PROMPT_VERSION, demo_extra())))
-        except errors.ClientError as e:
-            if e.code != 429:
-                raise
-            print("Gemini 한도 도달 → 여기까지만 채점")
-            break
-        v = score(it["sql"], sql)
-        rows.append({"date": f"{date.today()}", "id": it["id"], "question": it["question"],
-                     "pred_sql": sql, "label": v.label, "detail": v.detail})
-        print(f"[{it['id']}] {v.label}  {it['question']}", flush=True)
-
-    with OUT.open("w", newline="") as f:
+    new = not OUT.exists()
+    # 이어 쓰기 + 문항마다 기록: 회귀 이력이 남고, 중간에 죽어도 앞 결과는 보존
+    with OUT.open("a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
-        w.writeheader()
-        w.writerows(rows)
+        if new:
+            w.writeheader()
+        for i, it in enumerate(items):
+            if i:
+                time.sleep(CALL_INTERVAL)
+            try:
+                _, sql = split_comments(generate_sql(build_prompt(it["question"], PROMPT_VERSION, demo_extra())))
+            except errors.ClientError as e:
+                if e.code != 429:
+                    raise
+                print("Gemini 한도 도달 → 여기까지만 채점")
+                break
+            v = score(it["sql"], sql)
+            row = {"date": f"{date.today()}", "id": it["id"], "question": it["question"],
+                   "pred_sql": sql, "label": v.label, "detail": v.detail}
+            rows.append(row)
+            w.writerow(row)
+            f.flush()
+            print(f"[{it['id']}] {v.label}  {it['question']}", flush=True)
+
     c = Counter(r["label"] for r in rows)
     print(f"\n{PROMPT_VERSION}+demo  correct {c['correct']}/{len(items)}  silent_wrong={c['silent_wrong']} error={c['error']}  → {OUT.relative_to(ROOT)}")
 
