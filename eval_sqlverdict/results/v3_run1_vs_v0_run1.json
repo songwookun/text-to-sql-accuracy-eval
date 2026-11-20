@@ -1,0 +1,430 @@
+{
+  "schema_version": "1",
+  "run": {
+    "golden": "golden.yaml",
+    "predictions": "predictions/v3_run1.yaml",
+    "run_name": "v3_run1",
+    "dialect": "sqlite",
+    "pred_dialect": "sqlite",
+    "snapshot": "2026-11-20",
+    "tolerance": 0.001,
+    "tool_version": "0.1.0"
+  },
+  "summary": {
+    "total": 20,
+    "skipped_unverified": 0,
+    "unscorable": 0,
+    "missing_prediction": 0,
+    "correct": 18,
+    "correct_approx": 1,
+    "extra_columns": 1,
+    "silent_wrong": 0,
+    "error": 0,
+    "scored": 20,
+    "accuracy": 0.9
+  },
+  "by_trap": {
+    "biz_term": {
+      "total": 1,
+      "correct": 1
+    },
+    "dup_join": {
+      "total": 1,
+      "correct": 1
+    },
+    "empty_ok": {
+      "total": 1,
+      "correct": 0
+    },
+    "none": {
+      "total": 16,
+      "correct": 15
+    },
+    "unique_id": {
+      "total": 1,
+      "correct": 1
+    }
+  },
+  "by_level": {
+    "L1": {
+      "total": 5,
+      "correct": 5
+    },
+    "L2": {
+      "total": 6,
+      "correct": 5
+    },
+    "L3": {
+      "total": 5,
+      "correct": 5
+    },
+    "L4": {
+      "total": 4,
+      "correct": 3
+    }
+  },
+  "regressions": [],
+  "improvements": [
+    "Q08",
+    "Q11",
+    "Q12",
+    "Q13",
+    "Q14",
+    "Q16",
+    "Q17",
+    "Q19"
+  ],
+  "warnings": [],
+  "items": [
+    {
+      "id": "Q01",
+      "question": "배송 완료된 주문은 몇 건이야?",
+      "level": "L1",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "position",
+        "column_map": {
+          "COUNT(*)": "COUNT(DISTINCT order_id)"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q02",
+      "question": "결제 수단별로 결제가 몇 건씩 있었어?",
+      "level": "L1",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 5,
+        "got_rows": 5,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q03",
+      "question": "리뷰 평균 점수가 몇 점이야?",
+      "level": "L1",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q04",
+      "question": "2017년에 들어온 주문은 몇 건이야?",
+      "level": "L1",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "position",
+        "column_map": {
+          "COUNT(*)": "COUNT(order_id)"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q05",
+      "question": "판매자가 가장 많은 주(state) 상위 3개 알려줘",
+      "level": "L1",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 3,
+        "got_rows": 3,
+        "matched_by": "position",
+        "column_map": {
+          "n": "COUNT(DISTINCT seller_id)"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q06",
+      "question": "주문이 가장 많이 들어온 고객 주(state) 상위 5개는?",
+      "level": "L2",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 5,
+        "got_rows": 5,
+        "matched_by": "position",
+        "column_map": {
+          "n": "order_count"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q07",
+      "question": "상품이 가장 많이 등록된 카테고리 상위 5개를 영어 이름으로 보여줘",
+      "level": "L2",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 5,
+        "got_rows": 5,
+        "matched_by": "position",
+        "column_map": {
+          "n": "COUNT(p.product_id)"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q08",
+      "question": "리뷰 1점을 받은 주문들은 주문 상태별로 몇 건씩이야?",
+      "level": "L2",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 8,
+        "got_rows": 8,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q09",
+      "question": "평균 배송비가 가장 비싼 판매자 주(state) 상위 3개는?",
+      "level": "L2",
+      "trap": "none",
+      "label": "correct_approx",
+      "diff": {
+        "expected_rows": 3,
+        "got_rows": 3,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": true
+      },
+      "hints": [
+        "허용 오차 안에서만 같음: 반올림·자료형(FLOAT/DECIMAL) 차이 의심"
+      ]
+    },
+    {
+      "id": "Q10",
+      "question": "지난달 결제 수단별 결제 금액 합계 알려줘",
+      "level": "L2",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 4,
+        "got_rows": 4,
+        "matched_by": "position",
+        "column_map": {
+          "ROUND(SUM(p.payment_value), 2)": "SUM(op.payment_value)"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q11",
+      "question": "2018년 상반기 월별 배송 완료 주문의 매출은?",
+      "level": "L2",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 6,
+        "got_rows": 6,
+        "matched_by": "position",
+        "column_map": {
+          "ROUND(SUM(i.price), 2)": "revenue"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q12",
+      "question": "2018년 카테고리별 매출 상위 10개를 영어 카테고리명으로 보여줘",
+      "level": "L3",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 10,
+        "got_rows": 10,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q13",
+      "question": "상파울루(SP) 고객들이 가장 많이 산 카테고리 상위 5개는? 영어 이름으로, 팔린 상품 개수 기준",
+      "level": "L3",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 5,
+        "got_rows": 5,
+        "matched_by": "position",
+        "column_map": {
+          "n": "item_count"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q14",
+      "question": "판매자 주(state)별 매출 상위 5개는?",
+      "level": "L3",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 5,
+        "got_rows": 5,
+        "matched_by": "position",
+        "column_map": {
+          "revenue": "total_revenue"
+        },
+        "approx": false
+      },
+      "hints": [
+        "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
+      ]
+    },
+    {
+      "id": "Q15",
+      "question": "2018년에 상파울루(SP) 판매자가 리우데자네이루(RJ) 고객에게 판 상품은 몇 개야?",
+      "level": "L3",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q16",
+      "question": "건강·뷰티 카테고리 상품의 2018년 매출은 얼마야?",
+      "level": "L3",
+      "trap": "none",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q17",
+      "question": "바우처로 결제된 배송 완료 주문들의 매출 합계는?",
+      "level": "L4",
+      "trap": "dup_join",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q18",
+      "question": "2018년에 주문한 고객은 몇 명이야?",
+      "level": "L4",
+      "trap": "unique_id",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q19",
+      "question": "2017년 매출은 얼마야?",
+      "level": "L4",
+      "trap": "biz_term",
+      "label": "correct",
+      "diff": {
+        "expected_rows": 1,
+        "got_rows": 1,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false
+      },
+      "hints": []
+    },
+    {
+      "id": "Q20",
+      "question": "2019년에 들어온 주문 목록 보여줘",
+      "level": "L4",
+      "trap": "empty_ok",
+      "label": "extra_columns",
+      "diff": {
+        "expected_rows": 0,
+        "got_rows": 0,
+        "matched_by": "name",
+        "column_map": {},
+        "approx": false,
+        "extra_columns": [
+          "customer_id",
+          "order_status",
+          "order_purchase_timestamp",
+          "order_approved_at",
+          "order_delivered_carrier_date",
+          "order_delivered_customer_date",
+          "order_estimated_delivery_date"
+        ]
+      },
+      "hints": [
+        "필요 없는 컬럼 포함: customer_id, order_status, order_purchase_timestamp, order_approved_at, order_delivered_carrier_date, order_delivered_customer_date, order_estimated_delivery_date",
+        "SELECT * 사용: 필요한 컬럼만 고르세요"
+      ]
+    }
+  ]
+}

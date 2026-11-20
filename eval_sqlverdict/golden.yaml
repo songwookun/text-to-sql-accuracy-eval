@@ -1,0 +1,365 @@
+dialect: sqlite
+snapshot: '2026-11-20'
+items:
+- id: Q01
+  question: 배송 완료된 주문은 몇 건이야?
+  level: L1
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT COUNT(*) FROM orders WHERE order_status = 'delivered'
+  expected:
+    columns:
+    - COUNT(*)
+    rows:
+    - - 96478
+- id: Q02
+  question: 결제 수단별로 결제가 몇 건씩 있었어?
+  level: L1
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT payment_type, COUNT(*) FROM order_payments GROUP BY payment_type
+  expected:
+    columns:
+    - payment_type
+    - COUNT(*)
+    rows:
+    - - boleto
+      - 19784
+    - - credit_card
+      - 76795
+    - - debit_card
+      - 1529
+    - - not_defined
+      - 3
+    - - voucher
+      - 5775
+- id: Q03
+  question: 리뷰 평균 점수가 몇 점이야?
+  level: L1
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT AVG(review_score) FROM order_reviews
+  expected:
+    columns:
+    - AVG(review_score)
+    rows:
+    - - 4.08642062404257
+- id: Q04
+  question: 2017년에 들어온 주문은 몇 건이야?
+  level: L1
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT COUNT(*) FROM orders WHERE strftime('%Y', order_purchase_timestamp) = '2017'
+  expected:
+    columns:
+    - COUNT(*)
+    rows:
+    - - 45101
+- id: Q05
+  question: 판매자가 가장 많은 주(state) 상위 3개 알려줘
+  level: L1
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT seller_state, COUNT(*) AS n FROM sellers GROUP BY seller_state ORDER BY n DESC LIMIT 3
+  expected:
+    columns:
+    - seller_state
+    - n
+    rows:
+    - - SP
+      - 1849
+    - - PR
+      - 349
+    - - MG
+      - 244
+- id: Q06
+  question: 주문이 가장 많이 들어온 고객 주(state) 상위 5개는?
+  level: L2
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT c.customer_state, COUNT(DISTINCT o.order_id) AS n FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_state ORDER BY n DESC LIMIT 5
+  expected:
+    columns:
+    - customer_state
+    - n
+    rows:
+    - - SP
+      - 41746
+    - - RJ
+      - 12852
+    - - MG
+      - 11635
+    - - RS
+      - 5466
+    - - PR
+      - 5045
+- id: Q07
+  question: 상품이 가장 많이 등록된 카테고리 상위 5개를 영어 이름으로 보여줘
+  level: L2
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT t.product_category_name_english, COUNT(*) AS n FROM products p JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name GROUP BY t.product_category_name_english ORDER BY n DESC LIMIT 5
+  expected:
+    columns:
+    - product_category_name_english
+    - n
+    rows:
+    - - bed_bath_table
+      - 3029
+    - - sports_leisure
+      - 2867
+    - - furniture_decor
+      - 2657
+    - - health_beauty
+      - 2444
+    - - housewares
+      - 2335
+- id: Q08
+  question: 리뷰 1점을 받은 주문들은 주문 상태별로 몇 건씩이야?
+  level: L2
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT o.order_status, COUNT(DISTINCT o.order_id) FROM order_reviews r JOIN orders o ON r.order_id = o.order_id WHERE r.review_score = 1 GROUP BY o.order_status
+  expected:
+    columns:
+    - order_status
+    - COUNT(DISTINCT o.order_id)
+    rows:
+    - - approved
+      - 1
+    - - canceled
+      - 421
+    - - created
+      - 2
+    - - delivered
+      - 9381
+    - - invoiced
+      - 230
+    - - processing
+      - 256
+    - - shipped
+      - 640
+    - - unavailable
+      - 462
+- id: Q09
+  question: 평균 배송비가 가장 비싼 판매자 주(state) 상위 3개는?
+  level: L2
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT s.seller_state, ROUND(AVG(i.freight_value), 2) AS avg_freight FROM order_items i JOIN sellers s ON i.seller_id = s.seller_id GROUP BY s.seller_state ORDER BY avg_freight DESC LIMIT 3
+  expected:
+    columns:
+    - seller_state
+    - avg_freight
+    rows:
+    - - RO
+      - 50.91
+    - - CE
+      - 46.38
+    - - PB
+      - 39.19
+- id: Q10
+  question: 지난달 결제 수단별 결제 금액 합계 알려줘
+  level: L2
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT p.payment_type, ROUND(SUM(p.payment_value), 2) FROM orders o JOIN order_payments p ON o.order_id = p.order_id WHERE strftime('%Y-%m', o.order_purchase_timestamp) = '2018-07' GROUP BY p.payment_type
+  expected:
+    columns:
+    - payment_type
+    - ROUND(SUM(p.payment_value), 2)
+    rows:
+    - - boleto
+      - 198041.24
+    - - credit_card
+      - 803674.49
+    - - debit_card
+      - 44866.18
+    - - voucher
+      - 19958.84
+- id: Q11
+  question: 2018년 상반기 월별 배송 완료 주문의 매출은?
+  level: L2
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT strftime('%Y-%m', o.order_purchase_timestamp) AS month, ROUND(SUM(i.price), 2) FROM orders o JOIN order_items i ON o.order_id = i.order_id WHERE o.order_status = 'delivered' AND o.order_purchase_timestamp >= '2018-01-01' AND o.order_purchase_timestamp < '2018-07-01' GROUP BY month ORDER BY month
+  expected:
+    columns:
+    - month
+    - ROUND(SUM(i.price), 2)
+    rows:
+    - - 2018-01
+      - 924645.0
+    - - 2018-02
+      - 826437.13
+    - - 2018-03
+      - 953356.25
+    - - 2018-04
+      - 973534.09
+    - - 2018-05
+      - 977544.69
+    - - 2018-06
+      - 856077.86
+- id: Q12
+  question: 2018년 카테고리별 매출 상위 10개를 영어 카테고리명으로 보여줘
+  level: L3
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT t.product_category_name_english, ROUND(SUM(i.price), 2) AS revenue FROM orders o JOIN order_items i ON o.order_id = i.order_id JOIN products p ON i.product_id = p.product_id JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name WHERE o.order_status = 'delivered' AND strftime('%Y', o.order_purchase_timestamp) = '2018' GROUP BY t.product_category_name_english ORDER BY revenue DESC LIMIT 10
+  expected:
+    columns:
+    - product_category_name_english
+    - revenue
+    rows:
+    - - health_beauty
+      - 755724.5
+    - - watches_gifts
+      - 687855.2
+    - - bed_bath_table
+      - 532358.85
+    - - sports_leisure
+      - 517166.26
+    - - computers_accessories
+      - 496269.3
+    - - housewares
+      - 391823.46
+    - - furniture_decor
+      - 381649.57
+    - - auto
+      - 343288.3
+    - - baby
+      - 250615.79
+    - - cool_stuff
+      - 227743.7
+- id: Q13
+  question: 상파울루(SP) 고객들이 가장 많이 산 카테고리 상위 5개는? 영어 이름으로, 팔린 상품 개수 기준
+  level: L3
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT t.product_category_name_english, COUNT(*) AS n FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items i ON o.order_id = i.order_id JOIN products p ON i.product_id = p.product_id JOIN product_category_name_translation t ON p.product_category_name = t.product_category_name WHERE c.customer_state = 'SP' GROUP BY t.product_category_name_english ORDER BY n DESC LIMIT 5
+  expected:
+    columns:
+    - product_category_name_english
+    - n
+    rows:
+    - - bed_bath_table
+      - 5235
+    - - health_beauty
+      - 4204
+    - - sports_leisure
+      - 3667
+    - - furniture_decor
+      - 3531
+    - - housewares
+      - 3265
+- id: Q14
+  question: 판매자 주(state)별 매출 상위 5개는?
+  level: L3
+  trap: none
+  verified: true
+  ordered: true
+  gold_sql: SELECT s.seller_state, ROUND(SUM(i.price), 2) AS revenue FROM orders o JOIN order_items i ON o.order_id = i.order_id JOIN sellers s ON i.seller_id = s.seller_id WHERE o.order_status = 'delivered' GROUP BY s.seller_state ORDER BY revenue DESC LIMIT 5
+  expected:
+    columns:
+    - seller_state
+    - revenue
+    rows:
+    - - SP
+      - 8509511.46
+    - - PR
+      - 1232096.99
+    - - MG
+      - 977866.31
+    - - RJ
+      - 820611.59
+    - - SC
+      - 613591.65
+- id: Q15
+  question: 2018년에 상파울루(SP) 판매자가 리우데자네이루(RJ) 고객에게 판 상품은 몇 개야?
+  level: L3
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT COUNT(*) FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN order_items i ON o.order_id = i.order_id JOIN sellers s ON i.seller_id = s.seller_id WHERE s.seller_state = 'SP' AND c.customer_state = 'RJ' AND strftime('%Y', o.order_purchase_timestamp) = '2018'
+  expected:
+    columns:
+    - COUNT(*)
+    rows:
+    - - 4918
+- id: Q16
+  question: 건강·뷰티 카테고리 상품의 2018년 매출은 얼마야?
+  level: L3
+  trap: none
+  verified: true
+  ordered: false
+  gold_sql: SELECT ROUND(SUM(i.price), 2) FROM orders o JOIN order_items i ON o.order_id = i.order_id JOIN products p ON i.product_id = p.product_id WHERE p.product_category_name = 'beleza_saude' AND o.order_status = 'delivered' AND strftime('%Y', o.order_purchase_timestamp) = '2018'
+  expected:
+    columns:
+    - ROUND(SUM(i.price), 2)
+    rows:
+    - - 755724.5
+- id: Q17
+  question: 바우처로 결제된 배송 완료 주문들의 매출 합계는?
+  level: L4
+  trap: dup_join
+  verified: true
+  ordered: false
+  gold_sql: SELECT ROUND(SUM(i.price), 2) FROM orders o JOIN order_items i ON o.order_id = i.order_id WHERE o.order_status = 'delivered' AND o.order_id IN (SELECT order_id FROM order_payments WHERE payment_type = 'voucher')
+  expected:
+    columns:
+    - ROUND(SUM(i.price), 2)
+    rows:
+    - - 404020.72
+  why: order_payments는 주문당 결제 행이 여러 개일 수 있음(1:N). 결제 테이블을 직접 조인하면 item 행이 결제 행 수만큼 복제돼 404,020.72 → 632,719.07로 부풂. IN 서브쿼리로 주문만 거르고 매출=delivered 주문의 SUM(price)
+- id: Q18
+  question: 2018년에 주문한 고객은 몇 명이야?
+  level: L4
+  trap: unique_id
+  verified: true
+  ordered: false
+  gold_sql: SELECT COUNT(DISTINCT c.customer_unique_id) FROM orders o JOIN customers c ON o.customer_id = c.customer_id WHERE strftime('%Y', o.order_purchase_timestamp) = '2018'
+  expected:
+    columns:
+    - COUNT(DISTINCT c.customer_unique_id)
+    rows:
+    - - 52749
+  why: customer_id는 주문마다 새로 발급됨. 사람 단위는 customer_unique_id. 2018년 COUNT(DISTINCT customer_unique_id)=52,749 vs customer_id=54,011
+- id: Q19
+  question: 2017년 매출은 얼마야?
+  level: L4
+  trap: biz_term
+  verified: true
+  ordered: false
+  gold_sql: SELECT ROUND(SUM(i.price), 2) FROM orders o JOIN order_items i ON o.order_id = i.order_id WHERE o.order_status = 'delivered' AND strftime('%Y', o.order_purchase_timestamp) = '2017'
+  expected:
+    columns:
+    - ROUND(SUM(i.price), 2)
+    rows:
+    - - 5962902.01
+  why: 사내 정의 매출 = order_status='delivered' 주문의 SUM(order_items.price), 배송비 제외. 필터 없이 price만 6,155,806.98, price+freight 7,142,672.43, 정답 5,962,902.01
+- id: Q20
+  question: 2019년에 들어온 주문 목록 보여줘
+  level: L4
+  trap: empty_ok
+  verified: true
+  ordered: false
+  gold_sql: SELECT order_id FROM orders WHERE strftime('%Y', order_purchase_timestamp) = '2019'
+  expected:
+    columns:
+    - order_id
+    rows: []
+  why: 주문 데이터는 2016-09-04 ~ 2018-10-17. 2019년 주문은 없으므로 빈 결과가 정답
+  empty_ok: true

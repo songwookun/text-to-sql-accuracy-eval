@@ -1,0 +1,255 @@
+run_name: v0_run2
+dialect: sqlite
+items:
+- id: Q01
+  pred_sql: SELECT COUNT(*) FROM orders WHERE order_status = 'delivered'
+  result:
+    columns:
+    - COUNT(*)
+    rows:
+    - - 96478
+- id: Q02
+  pred_sql: "SELECT\n  payment_type,\n  COUNT(*)\nFROM order_payments\nGROUP BY\n  payment_type"
+  result:
+    columns:
+    - payment_type
+    - COUNT(*)
+    rows:
+    - - boleto
+      - 19784
+    - - credit_card
+      - 76795
+    - - debit_card
+      - 1529
+    - - not_defined
+      - 3
+    - - voucher
+      - 5775
+- id: Q03
+  pred_sql: SELECT AVG(review_score) FROM order_reviews
+  result:
+    columns:
+    - AVG(review_score)
+    rows:
+    - - 4.08642062404257
+- id: Q04
+  pred_sql: "SELECT\n  COUNT(*)\nFROM orders\nWHERE\n  strftime('%Y', order_purchase_timestamp) = '2017';"
+  result:
+    columns:
+    - COUNT(*)
+    rows:
+    - - 45101
+- id: Q05
+  pred_sql: "SELECT\n  seller_state,\n  COUNT(*) AS seller_count\nFROM sellers\nGROUP BY seller_state\nORDER BY seller_count DESC\nLIMIT 3;"
+  result:
+    columns:
+    - seller_state
+    - seller_count
+    rows:
+    - - SP
+      - 1849
+    - - PR
+      - 349
+    - - MG
+      - 244
+- id: Q06
+  pred_sql: "SELECT\n  T1.customer_state,\n  COUNT(T2.order_id) AS order_count\nFROM customers AS T1\nJOIN orders AS T2\n  ON T1.customer_id = T2.customer_id\nGROUP BY\n  T1.customer_state\nORDER BY\n  order_count DESC\nLIMIT 5;"
+  result:
+    columns:
+    - customer_state
+    - order_count
+    rows:
+    - - SP
+      - 41746
+    - - RJ
+      - 12852
+    - - MG
+      - 11635
+    - - RS
+      - 5466
+    - - PR
+      - 5045
+- id: Q07
+  pred_sql: "SELECT\n  t2.product_category_name_english\nFROM products AS t1\nJOIN product_category_name_translation AS t2\n  ON t1.product_category_name = t2.product_category_name\nGROUP BY\n  t2.product_category_name_english\nORDER BY\n  COUNT(t1.product_id) DESC\nLIMIT 5;"
+  result:
+    columns:
+    - product_category_name_english
+    rows:
+    - - bed_bath_table
+    - - sports_leisure
+    - - furniture_decor
+    - - health_beauty
+    - - housewares
+- id: Q08
+  pred_sql: "SELECT\n  T1.order_status,\n  COUNT(DISTINCT T1.order_id)\nFROM orders AS T1\nJOIN order_reviews AS T2\n  ON T1.order_id = T2.order_id\nWHERE\n  T2.review_score = 1\nGROUP BY\n  T1.order_status"
+  result:
+    columns:
+    - order_status
+    - COUNT(DISTINCT T1.order_id)
+    rows:
+    - - approved
+      - 1
+    - - canceled
+      - 421
+    - - created
+      - 2
+    - - delivered
+      - 9381
+    - - invoiced
+      - 230
+    - - processing
+      - 256
+    - - shipped
+      - 640
+    - - unavailable
+      - 462
+- id: Q09
+  pred_sql: "SELECT\n  T1.seller_state,\n  AVG(T2.freight_value) AS avg_freight\nFROM sellers AS T1\nJOIN order_items AS T2\n  ON T1.seller_id = T2.seller_id\nGROUP BY T1.seller_state\nORDER BY avg_freight DESC\nLIMIT 3"
+  result:
+    columns:
+    - seller_state
+    - avg_freight
+    rows:
+    - - RO
+      - 50.91285714285714
+    - - CE
+      - 46.38117021276596
+    - - PB
+      - 39.18815789473685
+- id: Q10
+  pred_sql: "SELECT\n  T2.payment_type,\n  SUM(T2.payment_value)\nFROM orders AS T1\nJOIN order_payments AS T2\n  ON T1.order_id = T2.order_id\nWHERE strftime('%Y-%m', T1.order_purchase_timestamp) = '2018-07'\nGROUP BY T2.payment_type"
+  result:
+    columns:
+    - payment_type
+    - SUM(T2.payment_value)
+    rows:
+    - - boleto
+      - 198041.24
+    - - credit_card
+      - 803674.49
+    - - debit_card
+      - 44866.18
+    - - voucher
+      - 19958.84
+- id: Q11
+  pred_sql: "SELECT\n  strftime('%Y-%m', t1.order_purchase_timestamp) AS month,\n  SUM(t2.payment_value) AS sales\nFROM orders AS t1\nJOIN order_payments AS t2\n  ON t1.order_id = t2.order_id\nWHERE t1.order_status = 'delivered'\n  AND strftime('%Y-%m', t1.order_purchase_timestamp) BETWEEN '2018-01' AND '2018-06'\nGROUP BY month\nORDER BY month;"
+  result:
+    columns:
+    - month
+    - sales
+    rows:
+    - - 2018-01
+      - 1078606.86
+    - - 2018-02
+      - 966510.88
+    - - 2018-03
+      - 1120678.0
+    - - 2018-04
+      - 1132933.95
+    - - 2018-05
+      - 1128836.69
+    - - 2018-06
+      - 1012090.68
+- id: Q12
+  pred_sql: "SELECT\n  t4.product_category_name_english,\n  SUM(t2.price) AS total_sales\nFROM orders AS t1\nJOIN order_items AS t2\n  ON t1.order_id = t2.order_id\nJOIN products AS t3\n  ON t2.product_id = t3.product_id\nJOIN product_category_name_translation AS t4\n  ON t3.product_category_name = t4.product_category_name\nWHERE strftime('%Y', t1.order_purchase_timestamp) = '2018'\nGROUP BY t4.product_category_name_english\nORDER BY total_sales DESC\nLIMIT 10;"
+  result:
+    columns:
+    - product_category_name_english
+    - total_sales
+    rows:
+    - - health_beauty
+      - 772238.15
+    - - watches_gifts
+      - 708850.9400000001
+    - - bed_bath_table
+      - 538069.26
+    - - sports_leisure
+      - 532566.49
+    - - computers_accessories
+      - 505476.31
+    - - housewares
+      - 399888.1
+    - - furniture_decor
+      - 386668.59
+    - - auto
+      - 347631.15
+    - - baby
+      - 256800.7
+    - - cool_stuff
+      - 240559.2
+- id: Q13
+  pred_sql: "SELECT\n  T5.product_category_name_english\nFROM customers AS T1\nJOIN orders AS T2\n  ON T1.customer_id = T2.customer_id\nJOIN order_items AS T3\n  ON T2.order_id = T3.order_id\nJOIN products AS T4\n  ON T3.product_id = T4.product_id\nJOIN product_category_name_translation AS T5\n  ON T4.product_category_name = T5.product_category_name\nWHERE\n  T1.customer_state = 'SP'\nGROUP BY\n  T5.product_category_name_english\nORDER BY\n  COUNT(T3.order_item_id) DESC\nLIMIT 5;"
+  result:
+    columns:
+    - product_category_name_english
+    rows:
+    - - bed_bath_table
+    - - health_beauty
+    - - sports_leisure
+    - - furniture_decor
+    - - housewares
+- id: Q14
+  pred_sql: "SELECT\n  t1.seller_state,\n  SUM(t2.price) AS total_sales\nFROM sellers AS t1\nJOIN order_items AS t2\n  ON t1.seller_id = t2.seller_id\nGROUP BY t1.seller_state\nORDER BY total_sales DESC\nLIMIT 5;"
+  result:
+    columns:
+    - seller_state
+    - total_sales
+    rows:
+    - - SP
+      - 8753396.21
+    - - PR
+      - 1261887.21
+    - - MG
+      - 1011564.74
+    - - RJ
+      - 843984.22
+    - - SC
+      - 632426.07
+- id: Q15
+  pred_sql: "SELECT\n  COUNT(t1.order_item_id)\nFROM order_items AS t1\nJOIN orders AS t2\n  ON t1.order_id = t2.order_id\nJOIN sellers AS t3\n  ON t1.seller_id = t3.seller_id\nJOIN customers AS t4\n  ON t2.customer_id = t4.customer_id\nWHERE\n  t3.seller_state = 'SP'\n  AND t4.customer_state = 'RJ'\n  AND strftime('%Y', t2.order_purchase_timestamp) = '2018'"
+  result:
+    columns:
+    - COUNT(t1.order_item_id)
+    rows:
+    - - 4918
+- id: Q16
+  pred_sql: "SELECT\n  SUM(t2.price)\nFROM orders AS t1\nJOIN order_items AS t2\n  ON t1.order_id = t2.order_id\nJOIN products AS t3\n  ON t2.product_id = t3.product_id\nJOIN product_category_name_translation AS t4\n  ON t3.product_category_name = t4.product_category_name\nWHERE\n  t4.product_category_name_english = 'health_beauty'\n  AND strftime('%Y', t1.order_purchase_timestamp) = '2018'"
+  result:
+    columns:
+    - SUM(t2.price)
+    rows:
+    - - 772238.15
+- id: Q17
+  pred_sql: "SELECT\n  SUM(t1.payment_value)\nFROM order_payments AS t1\nJOIN orders AS t2\n  ON t1.order_id = t2.order_id\nWHERE\n  t1.payment_type = 'voucher'\n  AND t2.order_status = 'delivered'"
+  result:
+    columns:
+    - SUM(t1.payment_value)
+    rows:
+    - - 343013.19
+- id: Q18
+  pred_sql: "SELECT\n  COUNT(DISTINCT t1.customer_unique_id)\nFROM\n  customers AS t1\n  JOIN orders AS t2 ON t1.customer_id = t2.customer_id\nWHERE\n  strftime('%Y', t2.order_purchase_timestamp) = '2018'"
+  result:
+    columns:
+    - COUNT(DISTINCT t1.customer_unique_id)
+    rows:
+    - - 52749
+- id: Q19
+  pred_sql: "SELECT\n  SUM(t1.payment_value)\nFROM order_payments AS t1\nJOIN orders AS t2\n  ON t1.order_id = t2.order_id\nWHERE\n  strftime('%Y', t2.order_purchase_timestamp) = '2017'"
+  result:
+    columns:
+    - SUM(t1.payment_value)
+    rows:
+    - - 7249746.73
+- id: Q20
+  pred_sql: SELECT * FROM orders WHERE strftime('%Y', order_purchase_timestamp) = '2019'
+  result:
+    columns:
+    - order_id
+    - customer_id
+    - order_status
+    - order_purchase_timestamp
+    - order_approved_at
+    - order_delivered_carrier_date
+    - order_delivered_customer_date
+    - order_estimated_delivery_date
+    rows: []

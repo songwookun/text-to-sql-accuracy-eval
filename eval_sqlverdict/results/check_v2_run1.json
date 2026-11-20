@@ -1,0 +1,19 @@
+{
+  "schema_version": "1",
+  "run": {
+    "golden": "golden.yaml",
+    "predictions": "predictions/v2_run1.yaml",
+    "tool_version": "0.1.0"
+  },
+  "summary": {
+    "error": 0,
+    "warn": 1
+  },
+  "issues": [
+    {
+      "severity": "warn",
+      "id": "Q10",
+      "message": "질문에 열린 기간 표현 '지난달': '2018년'처럼 닫힌 과거 기간을 권장합니다 (정답이 금방 낡음)"
+    }
+  ]
+}

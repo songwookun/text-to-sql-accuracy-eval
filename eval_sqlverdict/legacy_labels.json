@@ -1,0 +1,1442 @@
+[
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q07",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q08",
+  "csv_label": "silent_wrong",
+  "failure_type": "dup_count",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('approved', 1), ('canceled', 421), ('created', 2)], got [('approved', 1), ('canceled', 422), ('created', 2)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q11",
+  "csv_label": "silent_wrong",
+  "failure_type": "revenue_def",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('2018-01', 924645.0), ('2018-02', 826437.13), ('2018-03', 953356.25)], got [('2018-01', 1078606.86), ('2018-02', 966510.88), ('2018-03', 1120678.0)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q12",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_filter",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('health_beauty', 755724.5), ('watches_gifts', 687855.2), ('bed_bath_table', 532358.85)], got [('health_beauty', 772238.15), ('watches_gifts', 708850.9400000001), ('bed_bath_table', 538069.26)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q13",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_column",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('bed_bath_table', 5235), ('health_beauty', 4204), ('sports_leisure', 3667)], got [('bed_bath_table',), ('health_beauty',), ('sports_leisure',)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q14",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_filter",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('SP', 8509511.46), ('PR', 1232096.99), ('MG', 977866.31)], got [('SP', 8753396.21), ('PR', 1261887.21), ('MG', 1011564.74)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q16",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_filter",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [(755724.5,)], got [(772238.15,)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q17",
+  "csv_label": "silent_wrong",
+  "failure_type": "revenue_def",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [(404020.72,)], got [(343013.19,)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q19",
+  "csv_label": "silent_wrong",
+  "failure_type": "revenue_def",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [(5962902.01,)], got [(7249746.73,)]"
+ },
+ {
+  "version": "v0",
+  "run": 1,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q07",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_column",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('bed_bath_table', 3029), ('sports_leisure', 2867), ('furniture_decor', 2657)], got [('bed_bath_table',), ('sports_leisure',), ('furniture_decor',)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q08",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q11",
+  "csv_label": "silent_wrong",
+  "failure_type": "revenue_def",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('2018-01', 924645.0), ('2018-02', 826437.13), ('2018-03', 953356.25)], got [('2018-01', 1078606.86), ('2018-02', 966510.88), ('2018-03', 1120678.0)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q12",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_filter",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('health_beauty', 755724.5), ('watches_gifts', 687855.2), ('bed_bath_table', 532358.85)], got [('health_beauty', 772238.15), ('watches_gifts', 708850.9400000001), ('bed_bath_table', 538069.26)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q13",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_column",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('bed_bath_table', 5235), ('health_beauty', 4204), ('sports_leisure', 3667)], got [('bed_bath_table',), ('health_beauty',), ('sports_leisure',)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q14",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_filter",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('SP', 8509511.46), ('PR', 1232096.99), ('MG', 977866.31)], got [('SP', 8753396.21), ('PR', 1261887.21), ('MG', 1011564.74)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q16",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_filter",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [(755724.5,)], got [(772238.15,)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q17",
+  "csv_label": "silent_wrong",
+  "failure_type": "revenue_def",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [(404020.72,)], got [(343013.19,)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q19",
+  "csv_label": "silent_wrong",
+  "failure_type": "revenue_def",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [(5962902.01,)], got [(7249746.73,)]"
+ },
+ {
+  "version": "v0",
+  "run": 2,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q07",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q08",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q11",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q12",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q13",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q14",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q16",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q17",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q19",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 1,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q07",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q08",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q11",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q12",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q13",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q14",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q16",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q17",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q19",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v1",
+  "run": 2,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q07",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_column",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('bed_bath_table', 3029), ('sports_leisure', 2867), ('furniture_decor', 2657)], got [('bed_bath_table',), ('sports_leisure',), ('furniture_decor',)]"
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q08",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q11",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q12",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q13",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q14",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q16",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q17",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q19",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 1,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q07",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q08",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q11",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q12",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q13",
+  "csv_label": "silent_wrong",
+  "failure_type": "missing_column",
+  "scorer_now": "silent_wrong",
+  "scorer_detail": "expected [('bed_bath_table', 5235), ('health_beauty', 4204), ('sports_leisure', 3667)], got [('bed_bath_table',), ('health_beauty',), ('sports_leisure',)]"
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q14",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q16",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q17",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q19",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v2",
+  "run": 2,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q07",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q08",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q11",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q12",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q13",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q14",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q16",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q17",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q19",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 1,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q01",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q02",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q03",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q04",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q05",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q06",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q07",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q08",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q09",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q10",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q11",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q12",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q13",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q14",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q15",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q16",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q17",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q18",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q19",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ },
+ {
+  "version": "v3",
+  "run": 2,
+  "id": "Q20",
+  "csv_label": "correct",
+  "failure_type": "",
+  "scorer_now": "correct",
+  "scorer_detail": ""
+ }
+]
