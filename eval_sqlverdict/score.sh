@@ -2,7 +2,7 @@
 # 사용: sh eval_sqlverdict/score.sh  (저장소 루트에서)
 set -u
 cd "$(dirname "$0")"
-SV="uv run --with sqlverdict==0.1.0 sqlverdict"
+SV="uv run --with sqlverdict==0.1.1 sqlverdict"
 mkdir -p results
 $SV check golden.yaml > results/check_golden.txt; echo "check golden exit=$?" >> results/check_golden.txt
 $SV check golden.yaml --format json > results/check_golden.json

@@ -3,7 +3,7 @@
   "run": {
     "golden": "golden.yaml",
     "predictions": "predictions/v0_run1.yaml",
-    "tool_version": "0.1.0"
+    "tool_version": "0.1.1"
   },
   "summary": {
     "error": 0,

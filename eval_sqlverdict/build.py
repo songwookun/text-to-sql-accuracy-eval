@@ -1,6 +1,6 @@
 """golden.jsonl·runs/v*.csv → sqlverdict 입력(YAML) 생성. DB는 읽기 전용.
 
-실행: uv run --with sqlverdict==0.1.0 python eval_sqlverdict/build.py
+실행: uv run --with sqlverdict==0.1.1 python eval_sqlverdict/build.py
 """
 import csv
 import json

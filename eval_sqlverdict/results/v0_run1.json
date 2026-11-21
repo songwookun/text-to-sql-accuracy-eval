@@ -6,22 +6,23 @@
     "run_name": "v0_run1",
     "dialect": "sqlite",
     "pred_dialect": "sqlite",
-    "snapshot": "2026-11-20",
+    "snapshot": "2026-11-21",
     "tolerance": 0.001,
-    "tool_version": "0.1.0"
+    "tool_version": "0.1.1"
   },
   "summary": {
     "total": 20,
     "skipped_unverified": 0,
     "unscorable": 0,
     "missing_prediction": 0,
-    "correct": 10,
+    "correct": 11,
     "correct_approx": 1,
-    "extra_columns": 1,
+    "extra_columns": 0,
     "silent_wrong": 8,
     "error": 0,
     "scored": 20,
-    "accuracy": 0.5
+    "accuracy": 0.55,
+    "accuracy_with_approx": 0.6
   },
   "by_trap": {
     "biz_term": {
@@ -34,7 +35,7 @@
     },
     "empty_ok": {
       "total": 1,
-      "correct": 0
+      "correct": 1
     },
     "none": {
       "total": 16,
@@ -60,7 +61,7 @@
     },
     "L4": {
       "total": 4,
-      "correct": 1
+      "correct": 2
     }
   },
   "regressions": [],
@@ -365,7 +366,7 @@
         "ratio": 1.021851
       },
       "hints": [
-        "값이 정확히 1.02185배: 중복 조인·필터 누락 의심",
+        "값이 약 1.02배: 집계 대상·계산식·조건 차이 의심",
         "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
       ]
     },
@@ -388,7 +389,7 @@
         "ratio": 0.848999
       },
       "hints": [
-        "값이 정확히 0.848999배: 조건 과다·INNER JOIN으로 행 누락 의심",
+        "값이 약 0.849배: 집계 대상·계산식·조건 차이 의심",
         "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
       ]
     },
@@ -430,7 +431,7 @@
         "ratio": 1.215808
       },
       "hints": [
-        "값이 정확히 1.21581배: 중복 조인·필터 누락 의심",
+        "값이 약 1.22배: 집계 대상·계산식·조건 차이 의심",
         "이름이 달라 위치로 비교함: 컬럼 이름을 맞추거나 compare_columns 지정 권장"
       ]
     },
@@ -439,13 +440,11 @@
       "question": "2019년에 들어온 주문 목록 보여줘",
       "level": "L4",
       "trap": "empty_ok",
-      "label": "extra_columns",
+      "label": "correct",
       "diff": {
         "expected_rows": 0,
         "got_rows": 0,
-        "matched_by": "name",
-        "column_map": {},
-        "approx": false,
+        "empty_ok": true,
         "extra_columns": [
           "customer_id",
           "order_status",

@@ -6,22 +6,23 @@
     "run_name": "v2_run1",
     "dialect": "sqlite",
     "pred_dialect": "sqlite",
-    "snapshot": "2026-11-20",
+    "snapshot": "2026-11-21",
     "tolerance": 0.001,
-    "tool_version": "0.1.0"
+    "tool_version": "0.1.1"
   },
   "summary": {
     "total": 20,
     "skipped_unverified": 0,
     "unscorable": 0,
     "missing_prediction": 0,
-    "correct": 17,
+    "correct": 18,
     "correct_approx": 1,
-    "extra_columns": 1,
+    "extra_columns": 0,
     "silent_wrong": 1,
     "error": 0,
     "scored": 20,
-    "accuracy": 0.85
+    "accuracy": 0.9,
+    "accuracy_with_approx": 0.95
   },
   "by_trap": {
     "biz_term": {
@@ -34,7 +35,7 @@
     },
     "empty_ok": {
       "total": 1,
-      "correct": 0
+      "correct": 1
     },
     "none": {
       "total": 16,
@@ -60,7 +61,7 @@
     },
     "L4": {
       "total": 4,
-      "correct": 3
+      "correct": 4
     }
   },
   "regressions": [],
@@ -420,13 +421,11 @@
       "question": "2019년에 들어온 주문 목록 보여줘",
       "level": "L4",
       "trap": "empty_ok",
-      "label": "extra_columns",
+      "label": "correct",
       "diff": {
         "expected_rows": 0,
         "got_rows": 0,
-        "matched_by": "name",
-        "column_map": {},
-        "approx": false,
+        "empty_ok": true,
         "extra_columns": [
           "customer_id",
           "order_status",

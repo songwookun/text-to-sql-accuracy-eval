@@ -1,14 +1,14 @@
-sqlverdict 0.1.0 · v2_run2 · sqlite · snapshot 2026-11-20
+sqlverdict 0.1.1 · v2_run2 · sqlite · snapshot 2026-11-21
 
-정확도 85.0%  (correct 17 / 채점 20 / 전체 20)
-판정  correct 17 · correct_approx 1 · extra_columns 1 · silent_wrong 1 · error 0
+정확도 90.0% (근사 포함 95.0%)  (correct 18 / 채점 20 / 전체 20)
+판정  correct 18 · correct_approx 1 · extra_columns 0 · silent_wrong 1 · error 0
 제외  skipped_unverified 0 · unscorable 0 · missing_prediction 0
 
 함정       채점  정답  정답률
 ---------  ----  ----  ------
 biz_term      1     1  100.0%
 dup_join      1     1  100.0%
-empty_ok      1     0    0.0%
+empty_ok      1     1  100.0%
 none         16    14   87.5%
 unique_id     1     1  100.0%
 
@@ -17,10 +17,9 @@ unique_id     1     1  100.0%
 L1         5     5  100.0%
 L2         6     5   83.3%
 L3         5     4   80.0%
-L4         4     3   75.0%
+L4         4     4  100.0%
 
-id   판정            level  trap      질문                            안내
----  --------------  -----  --------  ------------------------------  ----------------------------------------------------------------------
-Q09  correct_approx  L2     none      평균 배송비가 가장 비싼 판매…   허용 오차 안에서만 같음: 반올림·자료형(FLOAT/DECIMAL) 차이 의심
-Q13  silent_wrong    L3     none      상파울루(SP) 고객들이 가장 많…  필요한 컬럼이 없음: n / 이름이 달라 위치로 비교함: 컬럼 이름을 맞추거…
-Q20  extra_columns   L4     empty_ok  2019년에 들어온 주문 목록 보…   필요 없는 컬럼 포함: customer_id, order_status, order_purchase_timest…
+id   판정            level  trap  질문                            안내
+---  --------------  -----  ----  ------------------------------  ----------------------------------------------------------------------
+Q09  correct_approx  L2     none  평균 배송비가 가장 비싼 판매…   허용 오차 안에서만 같음: 반올림·자료형(FLOAT/DECIMAL) 차이 의심
+Q13  silent_wrong    L3     none  상파울루(SP) 고객들이 가장 많…  필요한 컬럼이 없음: n / 이름이 달라 위치로 비교함: 컬럼 이름을 맞추거…

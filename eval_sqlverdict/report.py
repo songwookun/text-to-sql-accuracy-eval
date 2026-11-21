@@ -1,6 +1,6 @@
 """legacy_labels.json + results/*.json → 비교.md
 
-실행: uv run --with sqlverdict==0.1.0 python eval_sqlverdict/report.py  (build.py, score.sh 다음)
+실행: uv run --with sqlverdict==0.1.1 python eval_sqlverdict/report.py  (build.py, score.sh 다음)
 """
 import json
 from pathlib import Path
@@ -11,7 +11,8 @@ D = Path(__file__).resolve().parent
 RUNS = [f"v{v}_run{r}" for v in range(4) for r in (1, 2)]
 ABBR = {"correct": "C", "correct_approx": "A", "extra_columns": "X", "silent_wrong": "W", "error": "E"}
 
-golden = {i["id"]: i for i in yaml.safe_load(open(D / "golden.yaml", encoding="utf-8"))["items"]}
+_g = yaml.safe_load(open(D / "golden.yaml", encoding="utf-8"))
+golden, snapshot = {i["id"]: i for i in _g["items"]}, _g["snapshot"]
 preds = {n: {i["id"]: i for i in yaml.safe_load(open(D / "predictions" / f"{n}.yaml", encoding="utf-8"))["items"]}
          for n in RUNS}
 sv = {n: json.load(open(D / "results" / f"{n}.json", encoding="utf-8")) for n in RUNS}
@@ -31,12 +32,12 @@ def rel(a, b):
 
 L = []
 w = L.append
-w("# sqlverdict 0.1.0 재채점 비교\n")
+w("# sqlverdict 0.1.1 재채점 비교\n")
 w("- 기존 판정: `runs/v*.csv`의 label (현재 `text2sql/scorer.py`로 다시 채점해도 160행 모두 동일: "
   + str(all(x["csv_label"] == x["scorer_now"] for x in legacy.values())) + ")")
-w("- sqlverdict: `uv run --with sqlverdict==0.1.0 sqlverdict score` (기본 tolerance 0.001)")
-w("- 재현: `uv run --with sqlverdict==0.1.0 python eval_sqlverdict/build.py` → `sh eval_sqlverdict/score.sh` → "
-  "`uv run --with sqlverdict==0.1.0 python eval_sqlverdict/report.py`\n")
+w("- sqlverdict: `uv run --with sqlverdict==0.1.1 sqlverdict score` (기본 tolerance 0.001)")
+w("- 재현: `uv run --with sqlverdict==0.1.1 python eval_sqlverdict/build.py` → `sh eval_sqlverdict/score.sh` → "
+  "`uv run --with sqlverdict==0.1.1 python eval_sqlverdict/report.py`\n")
 
 w("## 1. 판정이 다른 행 (기존 correct 여부 ≠ sqlverdict correct 여부)\n")
 w("원인 칸은 **추정**. 근거는 실제 값.\n")
@@ -64,14 +65,15 @@ for n in RUNS:
 w(f"\n→ 160행 중 {len(diff_rows)}행. 기존 silent_wrong 16행은 sqlverdict에서도 모두 silent_wrong.\n")
 
 w("## 2. 실행별 요약\n")
-w("| run | 기존 correct | sv correct | correct_approx | extra_columns | silent_wrong | error | sv accuracy |")
-w("|---|---|---|---|---|---|---|---|")
+w("| run | 기존 correct | sv correct | correct_approx | extra_columns | silent_wrong | error | sv accuracy | 근사 포함 |")
+w("|---|---|---|---|---|---|---|---|---|")
 for n in RUNS:
     s = sv[n]["summary"]
     oc = sum(legacy[(n, q)]["csv_label"] == "correct" for q in golden)
     w(f"| {n} | {oc}/20 | {s['correct']} | {s['correct_approx']} | {s['extra_columns']} | {s['silent_wrong']} "
-      f"| {s['error']} | {s['accuracy']} |")
-w("\nsqlverdict의 accuracy는 `correct / 채점수`라 correct_approx·extra_columns가 오답 쪽으로 빠짐.\n")
+      f"| {s['error']} | {s['accuracy']} | {s['accuracy_with_approx']} |")
+w("\naccuracy = `correct / 채점수`, 근사 포함 = `(correct + correct_approx) / 채점수` (0.1.1부터). "
+  "기존 scorer는 소수 2자리 반올림 비교라 근사 포함 쪽과 맞음.\n")
 
 w("## 3. 문항 × 버전 × 회차 (기존/sqlverdict)\n")
 w("C=correct, A=correct_approx, X=extra_columns, W=silent_wrong, E=error. 다른 칸은 **굵게**.\n")
@@ -101,7 +103,7 @@ w("\n## 6. 변환 규칙 · why 초안\n")
 w("- level: `1` → `L1` (sqlverdict는 L1~L4 문자열만 허용, 값은 그대로)")
 w("- trap: `null` → `none`, 나머지 그대로")
 w("- ordered: `scorer.is_ordered(gold_sql)` (정답 SQL에 ORDER BY 유무)")
-w("- verified: 전부 true / empty_ok: Q20만 true / snapshot: 2026-11-20")
+w(f"- verified: 전부 true / empty_ok: Q20만 true / snapshot: {snapshot}")
 w("- expected: gold_sql을 `text2sql.executor.query`로 실행(읽기 전용, `scorer.run_gold`의 1,000행 검사 통과)")
 w("- 예측: pred_sql → `guard(pred_sql, 1000)` → `executor.query`. 실행 에러는 `error: \"<예외명>: <메시지>\"` "
   "(이번 데이터엔 에러 0건). pred_sql은 원문(guard 전) 저장\n")
@@ -112,11 +114,15 @@ for q, g in golden.items():
 w("\ntrap=none 16문항은 why를 쓰지 않음 (sqlverdict 규칙상 필수 아님).")
 
 w("\n## 7. sqlverdict 버그·개선점\n")
-w("이번 재채점에서 찾은 항목. 수정은 [sqlverdict](https://github.com/songwookun/sqlverdict)에서 진행.\n")
-w("- 버그: 이름 매칭 + 위치 대체가 섞이면 남는 컬럼이 있어도 `missing_columns`로 silent_wrong (판정 틀림)")
-w("- 버그: 1행 결과면 항상 \"값이 정확히 N배\" 힌트 + 조인·필터 원인 단정 (힌트 틀림, 이번 Q17·Q19)")
-w("- 확인 필요: empty_ok 문항에서 양쪽 0행인데 컬럼이 더 많으면 extra_columns (이번 Q20)")
-w("- 확인 필요: correct_approx가 accuracy에선 오답, --baseline에선 regression으로 집계 (이번 Q03·Q09)")
+w("수정은 [sqlverdict](https://github.com/songwookun/sqlverdict)에서 진행.\n")
+w("**0.1.0 재채점에서 찾고 0.1.1에서 고쳐진 것**\n")
+w("- 이름 매칭 + 위치 대체가 섞이면 남는 컬럼이 있어도 `missing_columns`로 silent_wrong → 남은 컬럼 순서대로 매칭")
+w("- 1행 결과면 항상 \"값이 정확히 N배\" + 조인·필터 원인 단정 → 단순 배수만 단정, 나머지는 \"약 N배\" (이번 Q16·Q17·Q19)")
+w("- empty_ok 문항에서 양쪽 0행인데 컬럼이 더 많으면 extra_columns → correct + 컬럼 힌트 (이번 Q20)")
+w("- correct_approx가 --baseline에서 regression → 통과로 취급, accuracy_with_approx 추가 (이번 Q03·Q09)\n")
+w("**0.1.1에 남은 것 (이번 데이터엔 영향 없음)**\n")
+w("- 버그: `compare_columns` 사용 시 비교 안 하는 정답 컬럼과 이름이 같은 예측 컬럼이 남은 컬럼 후보로 잡혀 오매칭")
+w("- 확인 필요: empty_ok 빈 결과면 정답 컬럼이 하나도 없어도 correct (missing 정보가 안 남음)")
 
 (D / "비교.md").write_text("\n".join(L) + "\n", encoding="utf-8")
 print("생성: eval_sqlverdict/비교.md")

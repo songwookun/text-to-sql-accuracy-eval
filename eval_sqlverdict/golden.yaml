@@ -1,5 +1,5 @@
 dialect: sqlite
-snapshot: '2026-11-20'
+snapshot: '2026-11-21'
 items:
 - id: Q01
   question: 배송 완료된 주문은 몇 건이야?
